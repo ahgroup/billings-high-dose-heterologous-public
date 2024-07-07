@@ -6,6 +6,7 @@ title: |
 format:
   pdf:
     toc: true
+    fontsize: "12"
 bibliography:
   - "refs.bib"
   - "pkgs.bib"
@@ -42,9 +43,10 @@ fit_flextable_to_page <- function(ft, pgwidth = 6.5){
 
 # Reproducibility instructions
 
-In order to reproduce our results, you should first clone the Git repository:
-PUT THE LINK HERE ONCE WE MAKE THE VERSION WITHOUT EXTRA STUFF
-(you can also download the repository as a zipped folder from the GitHub page).
+In order to reproduce our results, you should first download the archived
+repo from Zenodo (here: [https://doi.org/10.5281/zenodo.12666976](https://doi.org/10.5281/zenodo.12666976))
+or clone the Git repository (hosted on GitHub here: [https://github.com/ahgroup/Billings-2024-HD-Heterologous](https://github.com/ahgroup/Billings-2024-HD-Heterologous)).
+(You can also download the repository as a zipped folder from the GitHub page).
 If you use different software or package versions than what we used, or run the
 results in a different order, you may get errors or inconsistent results.
 
@@ -482,8 +484,6 @@ here::here("results", "tables", "vaccines-by-season.Rds") |>
 	fit_flextable_to_page()
 ```
 
-
-
 The panel of historical assays used in each year is shown in
 @tbl-strain-years.
 
@@ -498,8 +498,6 @@ here::here("results", "tables", "assay-seasons-table.Rds") |>
 	readr::read_rds() |>
 	fit_flextable_to_page()
 ```
-
-
 
 We used the abbreviated names of each strain throughout the paper in order to
 simplify tables and graphics. The complete strain names along with the
@@ -728,27 +726,15 @@ here::here("Results", "Figures", "homologous-vaccine-cate-post.png") |>
 	knitr::include_graphics()
 ```
 
-@fig-post-h1n1 shows the cACEs for all assay strains for the H1N1 strains.
+@fig-post-all-strains shows the cACEs for all assay strains.
 
 ```{r}
-#| label: fig-post-h1n1
+#| label: fig-post-all-strains
 #| fig-cap: |
-#|    Exponentiated cACE estimates for each H1N1 assay strain, within vaccine
+#|    Exponentiated cACE estimates for each assay strain, within vaccine
 #|    strains
 
-here::here("Results", "Figures", "h1n1-all-strains-cate-post.png") |>
-	knitr::include_graphics()
-```
-
-@fig-post-h3n2 shows the cACEs for all assay strains for the H3N2 strains.
-
-```{r}
-#| label: fig-post-h3n2
-#| fig-cap: |
-#|    Exponentiated cACE estimates for each H3N2 assay strain, within vaccine
-#|    strains
-
-here::here("Results", "Figures", "h3n2-all-strains-cate-post.png") |>
+here::here("Results", "Figures", "all-strains-cate-post.png") |>
 	knitr::include_graphics()
 ```
 
@@ -796,27 +782,15 @@ here::here("Results", "Figures", "homologous-vaccine-cate-sp.png") |>
 	knitr::include_graphics()
 ```
 
-@fig-sp-h1n1 shows the cACEs for all assay strains for the H1N1 strains.
+@fig-sp-all-strains shows the cACEs for all assay strains.
 
 ```{r}
-#| label: fig-sp-h1n1
+#| label: fig-sp-all-strains
 #| fig-cap: |
-#|    Exponentiated cACE estimates for each H1N1 assay strain, within vaccine
+#|    Exponentiated cACE estimates for each assay strain, within vaccine
 #|    strains
 
-here::here("Results", "Figures", "h1n1-all-strains-cate-sp.png") |>
-	knitr::include_graphics()
-```
-
-@fig-sp-h3n2 shows the cACEs for all assay strains for the H3N2 strains.
-
-```{r}
-#| label: fig-sp-h3n2
-#| fig-cap: |
-#|    Exponentiated cACE estimates for each H3N2 assay strain, within vaccine
-#|    strains
-
-here::here("Results", "Figures", "h3n2-all-strains-cate-sp.png") |>
+here::here("Results", "Figures", "all-strains-cate-sp.png") |>
 	knitr::include_graphics()
 ```
 
@@ -864,27 +838,15 @@ here::here("Results", "Figures", "homologous-vaccine-cate-sc.png") |>
 	knitr::include_graphics()
 ```
 
-@fig-sc-h1n1 shows the cACEs for all assay strains for the H1N1 strains.
+@fig-sc-all-strains shows the cACEs for all assay strains.
 
 ```{r}
-#| label: fig-sc-h1n1
+#| label: fig-sc-all-strains
 #| fig-cap: |
-#|    Exponentiated cACE estimates for each H1N1 assay strain, within vaccine
+#|    Exponentiated cACE estimates for each assay strain, within vaccine
 #|    strains
 
-here::here("Results", "Figures", "h1n1-all-strains-cate-sc.png") |>
-	knitr::include_graphics()
-```
-
-@fig-sc-h3n2 shows the cACEs for all assay strains for the H3N2 strains.
-
-```{r}
-#| label: fig-sc-h3n2
-#| fig-cap: |
-#|    Exponentiated cACE estimates for each H3N2 assay strain, within vaccine
-#|    strains
-
-here::here("Results", "Figures", "h3n2-all-strains-cate-sc.png") |>
+here::here("Results", "Figures", "all-strains-cate-sc.png") |>
 	knitr::include_graphics()
 ```
 
@@ -934,6 +896,8 @@ suppressPackageStartupMessages(
 
 sessionInfo()
 ```
+
+\clearpage
 
 # References
 ::: {#refs}

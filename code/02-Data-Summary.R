@@ -30,7 +30,8 @@ dat <- readr::read_rds(here::here("data", "processed", "model-data.Rds")) |>
 		dplyr::across(
 			c(vaccine_name, strain_name),
 			replace_strain_names
-		)
+		),
+		ind_id = stringr::str_extract(id, "[0-9]{1,4}")
 	)
 
 # Helper functions for geometric mean and SD

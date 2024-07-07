@@ -288,7 +288,7 @@ version 2.34.1 [@gabry2023] as the interface to the Stan probabilistic programmi
 language [@standevelopmentteam2022; @carpenter2017a]. More details on
 implementation are included in the Supplement, along with instructions for
 reproducing our results. The code and data are archived on Zenodo at this link:
-[HERE]() and included with the Supplement.
+[https://doi.org/10.5281/zenodo.12666977](https://doi.org/10.5281/zenodo.12666977).
 
 # Results
 
@@ -492,9 +492,9 @@ The funders had no role in the study design, data collection and analysis, decis
 * TMR: data collection, data curation, writing (review and editing)
 * AH: conceptualization, data curation, writing (review and editing), supervision, funding acquisition
 
-**Data availability statement**: all of the code files and data necessary to
-reproduce our results are provided in the Supplementary Materials. Additionally,
-an archive of our GitHub repository is located on Zenodo at this link: [HERE]().
+**Data availability statement**: an archive containing all of the code files and data
+necessary to reproduce our results is located on Zenodo at this link:
+[https://doi.org/10.5281/zenodo.12666976](https://doi.org/10.5281/zenodo.12666976).
 
 # References
 

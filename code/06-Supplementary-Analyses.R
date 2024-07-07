@@ -77,7 +77,9 @@ my_ggdag <-
 	ggdag::geom_dag_text() +
 	ggplot2::scale_color_manual(values = c("#56B4E9", "#E69F00", "black")) +
 	ggplot2::scale_shape_manual(values = c(16, 15)) +
-	ggdag::theme_dag()
+	ggdag::theme_dag() +
+	ggplot2::theme(plot.background = ggplot2::element_rect(fill = "white"))
+
 ggsave(
 	here::here("results", "figures", "dag.tiff"),
 	plot = my_ggdag,
@@ -128,7 +130,6 @@ season_counts_tab <-
 			strain_name = "Strain"
 		)
 	) |>
-	flextable::merge_v(j = 1) |>
 	flextable::valign(j = 1, valign = "top") |>
 	flextable::fix_border_issues()
 
