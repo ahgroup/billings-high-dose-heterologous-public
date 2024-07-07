@@ -23,7 +23,7 @@ get_x_axis_label_from_outcome <- function(
 		rlang::abort("Wrong outcome provided! Check for typos.")
 	}
 	
-	return(outcome)
+	return(label)
 }
 
 # Function to save the plots to png and tiff format
