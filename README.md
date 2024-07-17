@@ -4,7 +4,7 @@
 
 This repo contains the code, data, and results associated with the manuscript
 "High dose inactivated influenza vaccine inconsistently improves heterologous antibody responses in an elderly human cohort"
-by Billings et al.
+by Billings et al. (in preparation).
 
 ## Reproducability instructions
 
