@@ -15,8 +15,9 @@ correct package versions, it might not work.
 
 ## Licensing
 
-All code written by us is licensed under the [GNU Affero General Public License,
-version 3](./LICENSE.md).
+All code developed by the contributors is provided under the [GNU Affero General Public License, version 3](./LICENSE.md), allowing for reuse and adaptation with attribution. Any code not produced by us is clearly labeled and provided here under the terms of its original license.
+
+All text and images produced by the contributors are licensed according to the terms set by the journal in which this work is published. Any additional text and figures not covered by the journal’s license are available here under the [Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License](https://creativecommons.org/licenses/by-nc-sa/4.0/deed.en).
 
 ## Contact information
 
