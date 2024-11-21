@@ -1,5 +1,5 @@
 #
-# Model Results: Figures and Maybe Tables
+# Model results: figures and Maybe Tables
 # Zane Billings
 # 2024-02-01
 # This script takes the CATEs calculated from the previous script and makes the
@@ -132,7 +132,7 @@ homologous_vaccine_cace_ti <-
 	vaccine_cace_plot(
 		outcome = "Titer increase",
 		strains_to_plot = "homologous",
-		img_path = here::here("Results", "Figures", "homologous-vaccine-cate")
+		img_path = here::here("results", "figures", "homologous-vaccine-cate")
 	)
 
 # heterologous stratified by vaccine
@@ -140,7 +140,7 @@ heterologous_vaccine_cace_ti <-
 	vaccine_cace_plot(
 		outcome = "Titer increase",
 		strains_to_plot = "all strains",
-		img_path = here::here("Results", "Figures", "heterologous-vaccine-cate")
+		img_path = here::here("results", "figures", "heterologous-vaccine-cate")
 	)
 
 # Stratified by season
@@ -148,7 +148,7 @@ season_cace_ti <-
 	season_cace_plot(
 		outcome = "Titer increase",
 		strains_to_plot = "all strains",
-		img_path = here::here("Results", "Figures", "season-only-cate")
+		img_path = here::here("results", "figures", "season-only-cate")
 	)
 
 # cACE plots for all assay strains ####
@@ -156,10 +156,22 @@ strains_cace_ti <-
 	all_strains_cace_plot(
 		outcome = "Titer increase",
 		strains_to_plot = "all strains",
-		img_path = here::here("Results", "Figures", "all-strains-cate"),
-		img_width = 6.5 * 2.25,
-		img_height = 8 * 2.25
+		img_path = here::here("results", "figures", "all-strains-cate"),
+		img_width = 6.5 * 1.25,
+		img_height = 8 * 1.25,
+		split_plot = TRUE
 	)
+
+# Figure text needs resizing if used
+# strains_cace_ti_unified <-
+# 	all_strains_cace_plot(
+# 		outcome = "Titer increase",
+# 		strains_to_plot = "all strains",
+# 		img_path = here::here("results", "figures", "all-strains-cate"),
+# 		img_width = 6.5 * 1.25,
+# 		img_height = 8 * 1.25,
+# 		split_plot = FALSE
+# 	)
 
 # Supplement results ===========================================================
 
@@ -169,7 +181,7 @@ homologous_vaccine_cace_pt <-
 	vaccine_cace_plot(
 		outcome = "Post-vaccination titer",
 		strains_to_plot = "homologous",
-		img_path = here::here("Results", "Figures", "homologous-vaccine-cate-post")
+		img_path = here::here("results", "figures", "homologous-vaccine-cate-post")
 	)
 
 # heterologous stratified by vaccine
@@ -177,7 +189,7 @@ heterologous_vaccine_cace_pt <-
 	vaccine_cace_plot(
 		outcome = "Post-vaccination titer",
 		strains_to_plot = "all strains",
-		img_path = here::here("Results", "Figures", "heterologous-vaccine-cate-post")
+		img_path = here::here("results", "figures", "heterologous-vaccine-cate-post")
 	)
 
 # Stratified by season
@@ -185,7 +197,7 @@ season_cace_pt <-
 	season_cace_plot(
 		outcome = "Post-vaccination titer",
 		strains_to_plot = "all strains",
-		img_path = here::here("Results", "Figures", "season-only-cate-post")
+		img_path = here::here("results", "figures", "season-only-cate-post")
 	)
 
 # cACE plots for all assay strains ####
@@ -193,7 +205,7 @@ strains_cace_pt <-
 	all_strains_cace_plot(
 		outcome = "Post-vaccination titer",
 		strains_to_plot = "all strains",
-		img_path = here::here("Results", "Figures", "all-strains-cate-post"),
+		img_path = here::here("results", "figures", "all-strains-cate-post"),
 		img_width = 6.5 * 2.25,
 		img_height = 8 * 2.25
 	)
@@ -204,7 +216,7 @@ homologous_vaccine_cace_sp <-
 	vaccine_cace_plot(
 		outcome = "Seroprotection",
 		strains_to_plot = "homologous",
-		img_path = here::here("Results", "Figures", "homologous-vaccine-cate-sp")
+		img_path = here::here("results", "figures", "homologous-vaccine-cate-sp")
 	)
 
 # heterologous stratified by vaccine
@@ -212,7 +224,7 @@ heterologous_vaccine_cace_sp <-
 	vaccine_cace_plot(
 		outcome = "Seroprotection",
 		strains_to_plot = "all strains",
-		img_path = here::here("Results", "Figures", "heterologous-vaccine-cate-sp")
+		img_path = here::here("results", "figures", "heterologous-vaccine-cate-sp")
 	)
 
 # Stratified by season
@@ -220,7 +232,7 @@ season_cace_sp <-
 	season_cace_plot(
 		outcome = "Seroprotection",
 		strains_to_plot = "all strains",
-		img_path = here::here("Results", "Figures", "season-only-cate-sp")
+		img_path = here::here("results", "figures", "season-only-cate-sp")
 	)
 
 # cACE plots for all assay strains ####
@@ -228,7 +240,7 @@ strains_cace_sp <-
 	all_strains_cace_plot(
 		outcome = "Seroprotection",
 		strains_to_plot = "all strains",
-		img_path = here::here("Results", "Figures", "all-strains-cate-sp"),
+		img_path = here::here("results", "figures", "all-strains-cate-sp"),
 		img_width = 6.5 * 2.25,
 		img_height = 8 * 2.25
 	)
@@ -239,7 +251,7 @@ homologous_vaccine_cace_sc <-
 	vaccine_cace_plot(
 		outcome = "Seroconversion",
 		strains_to_plot = "homologous",
-		img_path = here::here("Results", "Figures", "homologous-vaccine-cate-sc")
+		img_path = here::here("results", "figures", "homologous-vaccine-cate-sc")
 	)
 
 # heterologous stratified by vaccine
@@ -247,7 +259,7 @@ heterologous_vaccine_cace_sc <-
 	vaccine_cace_plot(
 		outcome = "Seroconversion",
 		strains_to_plot = "all strains",
-		img_path = here::here("Results", "Figures", "heterologous-vaccine-cate-sc")
+		img_path = here::here("results", "figures", "heterologous-vaccine-cate-sc")
 	)
 
 # Stratified by season
@@ -255,7 +267,7 @@ season_cace_sc <-
 	season_cace_plot(
 		outcome = "Seroconversion",
 		strains_to_plot = "all strains",
-		img_path = here::here("Results", "Figures", "season-only-cate-sc")
+		img_path = here::here("results", "figures", "season-only-cate-sc")
 	)
 
 # cACE plots for all assay strains ####
@@ -263,7 +275,7 @@ strains_cace_sc <-
 	all_strains_cace_plot(
 		outcome = "Seroconversion",
 		strains_to_plot = "all strains",
-		img_path = here::here("Results", "Figures", "all-strains-cate-sc"),
+		img_path = here::here("results", "figures", "all-strains-cate-sc"),
 		img_width = 6.5 * 2.25,
 		img_height = 8 * 2.25
 	)

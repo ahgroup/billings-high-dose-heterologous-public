@@ -12,6 +12,10 @@ bibliography:
   - "pkgs.bib"
   - "mybib.bib"
 csl: "nlm_csl.csl"
+filters:
+  - highlight-text.lua
+editor_options:
+  chunk_output_type: console
 ---
 
 ```{r setup, include=FALSE}
@@ -26,7 +30,7 @@ knitr::opts_chunk$set(
 library(flextable)
 
 # https://stackoverflow.com/questions/57175351/flextable-autofit-in-a-rmarkdown-to-word-doc-causes-table-to-go-outside-page-mar
-fit_flextable_to_page <- function(ft, pgwidth = 6.5){
+fit_flextable_to_page <- function(ft, pgwidth = 6){
 	
 	ft_out <- flextable::autofit(ft)
 	
@@ -39,24 +43,15 @@ fit_flextable_to_page <- function(ft, pgwidth = 6.5){
 }
 ```
 
-
+\clearpage
 
 # Reproducibility instructions
 
-In order to reproduce our results, you should first download the archived
-repo from Zenodo (here: [https://doi.org/10.5281/zenodo.12666976](https://doi.org/10.5281/zenodo.12666976))
-or clone the Git repository (hosted on GitHub here: [https://github.com/ahgroup/Billings-2024-HD-Heterologous](https://github.com/ahgroup/Billings-2024-HD-Heterologous)).
-(You can also download the repository as a zipped folder from the GitHub page).
-If you use different software or package versions than what we used, or run the
-results in a different order, you may get errors or inconsistent results.
+In order to reproduce our results, you should first download the archived repo from Zenodo (here: [https://doi.org/10.5281/zenodo.12666976](https://doi.org/10.5281/zenodo.12666976)) or clone the Git repository (hosted on GitHub here: [https://github.com/ahgroup/Billings-2024-HD-Heterologous](https://github.com/ahgroup/Billings-2024-HD-Heterologous)). (You can also download the repository as a zipped folder from the GitHub page). If you use different software or package versions than what we used, or run the results in a different order, you may get errors or inconsistent results.
 
-We ran the analysis on a Windows 10 Enterprise 64-bit (build 19045) machine
-with 64 GB RAM and a 36-core processor. Any statements we make about the
-execution time of code will vary across machines, especially if the hardware
-is different from these specs.
+We ran the analysis on a Windows 10 Enterprise 64-bit (build 19045) machine with 64 GB RAM and a 36-core processor. Any statements we make about the execution time of code will vary across machines, especially if the hardware is different from these specs.
 
-Before you can reproduce our results you will need to install the following
-software requirements.
+Before you can reproduce our results you will need to install the following software requirements.
 
 - `R` version 4.4.1, available from [https://cran.r-project.org/](https://cran.r-project.org/).
 - RTools 4.4, also available from CRAN.
@@ -67,72 +62,36 @@ software requirements.
 With the software installed, follow these instructions to reproduce our results.
 
 1. Open the `SD-HD-flu-vaccine.Rproj` file in RStudio.
-1. Once `renv` initializes, run the command `renv::restore()` in the Console
-in order to begin installing the required packages. If you have issues at this
-stage, you can also run `renv::deactivate()` and install the packages manually.
-However, if you do not use `renv` or use different package versions than we
-did, the following instructions might not work for you.
-1. (This step is optional. If you do not want to re-run the Bayesian models, you can ignore this step.) If you want to re-run the Bayesian models, you
-need to install `cmdstan` at this step. You should have the `cmdstanr` package
-installed if you successfully followed the `renv` instructions, and you can
-follow the `cmdstanr` quick start guide at [https://mc-stan.org/cmdstanr/articles/cmdstanr.html](https://mc-stan.org/cmdstanr/articles/cmdstanr.html) to install `cmdstan`. Start at the section titled "Installing CmdStan". Installing `cmdstan` can be
-difficult, so make sure to carefully read the instructions. If you have issues
-with the `cmdstan` path or installation, you may need to open a new R GUI or
-RStudio window as an administrator (on Windows), install version `v1.0.8` of
-`cmdstanr` manually, and re-run the installation and path setting steps.
-If you still have issues, the Stan discourse forum ([https://discourse.mc-stan.org/](https://discourse.mc-stan.org/)) is often an
-excellent place to ask for help.
-1. Now you should be able to run our code files. All of the code files are
-located in the `code` directory. The code files are designed to run in the
-following order, although multiple steps can potentially be skipped since we
-provide our results along with the code.
-    * `02-Data-Summary.R`: the input files for this code are provided and it
-    does not take a long time to run. This file recreates many of our summary
-    tables.
-    * `03-Model-Fitting.R`: this code specifies the `brms` models, and runs the
-    HMC sampling scheme for our bayesian regression models. **This code takes a
-    very long time to execute.** You do not need to run this code to reproduce
-    our model results, as we have provided the model fit files along with the
-    code.
-    * `04-Posterior-Summaries.R`: this code computes the (c)ACE estimates from
-    the fitted models. You should be able to run this code without running
-    script `03`. **Running this code took about an hour for us**, but will
-    provide time estimates after the first set of cACEs is calculated.
-    Running this code will reconstruct the model fit files.
-    * `05-Model-Results.R`: processes the (c)ACE estimates into figures for the
-    manuscript. The `all-cates-combined.Rds` input file is produced by script 04 and is provided with our code.. You can produce all of our figures with the
-    cleaned data and this file of estimates.
-    * `06-Supplementary-Analyses.R`: contains additional calculations for the
-    Supplementary Material. You can run the first part of the script, including
-    the DAG and tables, with only the cleaned data, which is provided. You
-    should (at minimum) run script `04` before this code to ensure the model
-    fit files are reconstructed.
-    * The `common-functions` directory contains various helper functions and
-    declarations and running the code on its own is not very interesting, although
-    it is possible as long as all of the packages are installed correctly.
-1. If you have run all of the code files, you can reproduce an unformatted
-version of the manuscript and supplement by rendering the files
-`products/manuscript/manuscript.qmd` and `products/manuscript/supplement.qmd`.
-When you open these files in RStudio with Quarto installed, you will see a
-"Render" button in the GUI that will execute the appropriate Quarto commands
-for you.
+1. Once `renv` initializes, run the command `renv::restore()` in the Console in order to begin installing the required packages. If you have issues at this stage, you can also run `renv::deactivate()` and install the packages manually. However, if you do not use `renv` or use different package versions than we did, the following instructions might not work for you.
+1. (This step is optional. If you do not want to re-run the Bayesian models, you can ignore this step.) If you want to re-run the Bayesian models, you need to install `cmdstan` at this step. You should have the `cmdstanr` package installed if you successfully followed the `renv` instructions, and you can follow the `cmdstanr` quick start guide at [https://mc-stan.org/cmdstanr/articles/cmdstanr.html](https://mc-stan.org/cmdstanr/articles/cmdstanr.html) to install `cmdstan`. Start at the section titled "Installing CmdStan". Installing `cmdstan` can be difficult, so make sure to carefully read the instructions. If you have issues with the `cmdstan` path or installation, you may need to open a new R GUI or RStudio window as an administrator (on Windows), install version `v1.0.8` of `cmdstanr` manually, and re-run the installation and path setting steps. If you still have issues, the Stan discourse forum ([https://discourse.mc-stan.org/](https://discourse.mc-stan.org/)) is often an excellent place to ask for help.
+1. Now you should be able to run our code files. All of the code files are located in the `code` directory. The code files are designed to run in the following order, although multiple steps can potentially be skipped since we provide our results along with the code.
+    * `02-Data-Summary.R`: the input files for this code are provided and it does not take a long time to run. This file recreates many of our summary tables.
+    * `03-Model-Fitting.R`: this code specifies the `brms` models, and runs the HMC sampling scheme for our bayesian regression models. **This code takes a very long time to execute.** You do not need to run this code to reproduce our model results, as we have provided the model fit files along with the code.
+    * `04-Posterior-Summaries.R`: this code computes the (c)ACE estimates from the fitted models. You should be able to run this code without running script `03`. **Running this code took about an hour for us**, but will provide time estimates after the first set of cACEs is calculated. Running this code will reconstruct the model fit files.
+    * `05-Model-Results.R`: processes the (c)ACE estimates into figures for the manuscript. The `all-cates-combined.Rds` input file is produced by script 04 and is provided with our code.. You can produce all of our figures with the cleaned data and this file of estimates.
+    * `06-Supplementary-Analyses.R`: contains additional calculations for the Supplementary Material. You can run the first part of the script, including the DAG and tables, with only the cleaned data, which is provided. You should (at minimum) run script `04` before this code to ensure the model fit files are reconstructed.
+    * The `common-functions` directory contains various helper functions and declarations and running the code on its own is not very interesting, although it is possible as long as all of the packages are installed correctly.
+1. If you have run all of the code files, you can reproduce an unformatted version of the manuscript and supplement by rendering the files `products/manuscript/manuscript.qmd` and `products/manuscript/supplement.qmd`. When you open these files in RStudio with Quarto installed, you will see a "Render" button in the GUI that will execute the appropriate Quarto commands for you.
 
-Note that the script `01-Data-Processing.R` contains our code for obtaining the
-finalized data set released in the Supplement: you will not be able to run this
-file. Se do not provide the input file, `clean-data.Rds` due to data sensitivity
-concerns. Instead we have provided the output files in the `data/processed`
-folder along with the code.
+Note that the script `01-Data-Processing.R` contains our code for obtaining the finalized data set released in the Supplement: you will not be able to run this file. Se do not provide the input file, `clean-data.Rds` due to data sensitivity concerns. Instead we have provided the output files in the `data/processed` folder along with the code.
+
+[Again, we note that our Bayesian models are computationally intensive, especially compared to similar frequentist models. The model fits in script 03 took several days to run on our relatively good computer, but will take a long time even on cutting-edge machines. We recommend only re-running the model fitting process for readers who wish to validate our results.]{color="#FF2400"}
+
+\clearpage
+
+# [Additional background references]{color="#FF2400"}
+
+[We also consulted additional references on the immunogenecity benefits [@couch2007safety; @falsey2009randomized; @diazgranados2013highdose; @diazgranados2014efficacy; @diazgranados2015a; @lee2021efficacy; @chang2019a; @chaves2023; @wilkinson2017a; @samson2019; @dunning2016; @li2021a] and clinical benefits [@chaves2023; @lee2018a; @izurieta2015; @izurieta2021; @robison2018; @hsiao2023; @doyle2021; @paudel2020] of Fluzone HD vaccine relative to SD, which are included here due to the reference limit in the main text. Some studies which included younger adults did not find a difference between the HD and SD vaccine [@naleway2023].]{color="#FF2400"}
+
+[Notably, in the main text we do not discuss comparisons with vaccines other than the split-inactivated SD vaccine, but the HD vaccine also appears to perform similarly to other enhanced vaccines like those with adjuvants [@schmader2023; @li2021a; @coleman2021]. Unfortunately we do not have access to data from study groups that received other enhanced vaccine candidates, but comparing the effects of, among others, adjuvanted and high-dose vaccines on the heterologous antibody response could reveal intriguing differences in the underlying immunology of the different formulations.]{color="#FF2400"}
+
+\clearpage
 
 # Expanded Methods
 
 ## Causal model for confounding
 
-Since we used observational data rather than clinical trial data to estimate
-the effect of vaccine dose on immunological responses, we needed to adopt a
-causal model to control for confounding. A confounder is any other factor
-which can affect both the treatment an individual receives (i.e., which dose
-they got) and the outcome. We represented our causal assumptions using a
-directed acyclic graph (DAG), shown in @fig-dag.
+Since we used observational data rather than clinical trial data to estimate the effect of vaccine dose on immunological responses, we needed to adopt a causal model to control for confounding. A confounder is any other factor which can affect both the treatment an individual receives (i.e., which dose they got) and the outcome. We represented our causal assumptions using a directed acyclic graph (DAG), shown in @fig-dag.
 
 ```{r}
 #| label: fig-dag
@@ -144,16 +103,16 @@ directed acyclic graph (DAG), shown in @fig-dag.
 knitr::include_graphics(here::here("results", "figures", "dag.png"))
 ```
 
-In order to show the DAG nicely, the variable names are abbreviated by single
-letters. The letters in @fig-dag correspond to the following variables in
-our data (@tbl-dag-abbv).
+In order to show the DAG nicely, the variable names are abbreviated by single letters. The letters in @fig-dag correspond to the following variables in our data (@tbl-dag-abbv).
+
+[The observed confounders we included in our model were age, calendar time, and birth year. Age could potentially be a confounder since elderly individuals are more encouraged to get the high dose vaccine, and older individuals tend to have attenuated immune responses [@dugan2020a]. Birth year was included as a confounder for the same reason -- older individuals could be more likely to receive HD vaccines, and the cohort effect of birth year imprinting affects vaccine response independently of age [@arevalo2020; @vieira2021; @gostic2016; @gostic2019]. Finally, we included the season as the calendar year to account for differences in vaccines between seasons. Some vaccine formulations are more immunogenic than others, which varies by season. Additionally, we included this as a confounder because the production and administration rate of HD vaccines could change by season, although we have no data with which to test this hypothesis. However, including controlling for a variable which is not actually a confounder does not include bias in the model results (unless collider bias is induced, which we do not believe is the case here as there are no relevant variables that have both season and dose or season and vaccine response as common causes. Any such variables are temporally separated from the treatment and response.)]{color="#FF2400"}
 
 | Abbreviation | Variable                     |
 |--------------|------------------------------|
 | d            | Vaccine dose                 |
 | y            | Immunological outcome        |
 | a            | Age                          |
-| t            | Calendar time                |
+| t            | Season                       |
 | i            | Other individual effects     |
 | U            | Other unobserved confounders |
 | b            | Birth year                   |
@@ -163,36 +122,39 @@ our data (@tbl-dag-abbv).
 
 : Variable abbreviations used in the DAG. {#tbl-dag-abbv}
 
-We represent unobserved confounding in our DAG as the variable $U$. There are
-likely many confounders, like individual variables driving
-vaccine choice, which we cannot account for because they were not collected as
-part of the study we used. We attempted to control for unobserved confounding
-as best as possible by using a random effects model structure which can absorb
-part of the effect of unobserved confounders by modeling between-individual
-variability (which we represent as $i$ in the DAG). Not all unobserved
-confounding effects can be absorbed by individual random effects, but some,
-such as for demographic characteristics like sex and race, potentially can be.
+We represent unobserved confounding in our DAG as the variable $U$. There are likely many confounders, like individual variables driving vaccine choice, which we cannot account for because they were not collected as part of the study we used. We attempted to control for unobserved confounding as best as possible by using a random effects model structure which can absorb part of the effect of unobserved confounders by modeling between-individual variability (which we represent as $i$ in the DAG). Not all unobserved confounding effects can be absorbed by individual random effects, but some, such as for demographic characteristics like sex and race, potentially can be.
 
-Even though not all of the variables shown are confounders ($p$, $sv$, and $sa$
-are only causes of the outcome in our DAG), we include $sv$ and $sa$ so we can
-obtain stratum-specific effects for those variables. Controlling for $p$ does
-not open any backdoor paths (under our assumed causal model), so since $p$ is a
-cause of the outcome we can include $p$ in the model to potentially improve the
-efficiency of our estimates.
+Even though not all of the variables shown are confounders ($p$, $sv$, and $sa$ are only causes of the outcome in our DAG), we include $sv$ and $sa$ so we can obtain stratum-specific effects for those variables. Controlling for $p$ does not open any backdoor paths (under our assumed causal model), so since $p$ is a cause of the outcome we can include $p$ in the model to potentially improve the efficiency of our estimates.
 
-## Model formula
+\clearpage
 
-The model formula for our hierarchical models was chosen based on *a priori*
-covariate information from our causal model, along with constraints induced by
-the estimability of random effects. We elected not to include interaction
-terms or any other nuisance covariates due to the complexity of the model.
-Notably, our model is unlikely to converge under frequentist maximum likelihood
-estimation, such as by the `nlme` R package, or other similar methods. The
-random effects in the model are overdetermined, which leads to near-zero
-(boundary) estimates of random effect covariance terms, which prevents
-the maximum likelihood model from reaching convergence. However, having random
-effects which are all similar does not prevent the NUTS algorithm implemented
-by Stan/`brms` from exploring the implied posterior distribution.
+## [Analysis of confounders on treatment choice]{color="#FF2400"}
+
+[In the study our data were collected in, participants over age 65 were offered the choice between SD and HD vaccine, so the treatment (vaccine dose) was not assigned randomly as it would be in a clinical trial. There are many factors that could affect which treatment group an individual was likely to choose, including prior knowledge about the HD vaccine, batch effects in receiving shipments of HD vaccines at the clinical study site, demographic characteristics, risk-taking behavior, prior adverse events from vaccination, and others. While we cannot assess many of these characteristics, we did assess the demographic characteristics that were available to us to inform our selection of confounders in the model.]{color="#FF2400"}
+
+[@tbl-dose-response shows the results of our analysis. We used Bayesian logistic regression to calculate the odds ratio for receiving the HD vaccine (relative to receiving the SD vaccine). Each model used the dose as the outcome (with HD coded as an event, that is, SD was coded as 0 and HD was coded as 1) and we included a single categorical predictor in each model. The ORs are calculated by exponentiating the mean beta coefficient from 2000 post-warmup Hamiltonian Monte Carlo samples, implemented using the `brms` package. We used the same priors and setup as our main logistic regression model, which are explained in detail in the model fitting section. The credible interval shown is the highest density continuous interval over the post-warmup samples.]{color="#FF2400"}
+
+[Our results (@tbl-dose-response) show that several demographic and study-specific variables affected the odds of receiving an HD vaccine. More HD vaccines were available at the UGA study site than the PA and FL study sites, and in general HD vaccine uptake increased as the study continued, although the effect was not strong (the credible interval was wide and had a large amount of posterior density on either side of 1). Patients who were assigned female at birth (AFAB) and assigned male at birth (AMAB) had nearly equal odds of receiving HD vaccines, as did White patients and patients of color. Finally, older patients were somewhat more likely to receive HD vaccination, although estimating the OR was unstable for the oldest groups since there were very few patients over age 80. Since our study was conducted over a small temporal scale, the results for birth year are very similar to the results for age at enrollment. These odds ratios matched our causal hypotheses about age, birth year, study site, and calendar time (represented by influenza season) and help justify our inclusion of these terms in the model as confounders. Since sex assigned at birth and race/ethnicity did not appear to be associated with which dose was received, we elected not to include these variables in the model.]{color="#FF2400"}
+
+```{r}
+#| label: tbl-dose-response
+#| tbl-pos: "p"
+#| tbl-cap: |
+#|   [Odds ratio for receiving HD vaccine. I.e., each OR is the odds of receiving the HD vaccine in the relevant group compared to the reference group for each variable. Each model was a univariable (simple) logistic regression model where the dose was the outcome (a patient who received SD was coded as 0 and a patient who received HD was coded as 1) and one single categorical covariate was included in the model. OR was calculated by exponentiating the relevant slope coefficient from the logistic regression model, and thus an OR higher than one indicates a group with higher odds of receiving the HD vaccine than the reference group for a given variable. A dash indicates the reference group for a given variable, which means an OR could not be calculated.]{color="#FF2400"}
+
+here::here("results", "tables", "dose-outcome-analysis-table.Rds") |>
+	readr::read_rds() |>
+	fit_flextable_to_page() |>
+	flextable::fontsize(size = 8, part = "body")
+```
+
+\clearpage
+
+## Model formula and explanation
+
+[The full mathematical equations for our model are shown in the next section. Here, we briefly explain the model we used and the implementation in `brms`.]{color="#FF2400"}
+
+The model formula for our hierarchical models was chosen based on *a priori* covariate information from our causal model, along with constraints induced by the estimability of random effects. We elected not to include interaction terms or any other nuisance covariates due to the complexity of the model. Notably, our model is unlikely to converge under frequentist maximum likelihood estimation, such as by the `nlme` R package, or other similar methods. The random effects in the model are overdetermined, which leads to near-zero (boundary) estimates of random effect covariance terms, which prevents the maximum likelihood model from reaching convergence. However, having random effects which are all similar does not prevent the NUTS algorithm implemented by Stan/`brms` from exploring the implied posterior distribution.
 
 We specified our models in `brms` using the following model formula:
 
@@ -205,99 +167,83 @@ outcome ~ dose +
 	(1 + dose | vaccine_name) + (1 + dose | vaccine_name:strain_type).
 ```
 
-The `brms` model syntax is explained more fully in the `brms` documentation,
-but we will briefly explain the model formula. The `outcome ~` specification
-declares that `outcome` is the outcome variable in the model, and everything
-after the `~` will be an independent variable. The term `dose` specifies a
-fixed effect of the variable `dose`, which by default will use indicator
-encoding (as will all qualitative variables). The model also includes a global
-intercept term by default.
+The `brms` model syntax is explained more fully in the `brms` documentation, but we will briefly explain the model formula. The `outcome ~` specification declares that `outcome` is the outcome variable in the model, and everything after the `~` will be an independent variable. The term `dose` specifies a fixed effect of the variable `dose`, which by default will use indicator encoding (as will all qualitative variables). The model also includes a global intercept term by default.
 
-All of the terms which look like `s(variable_name, k = 5)` specify smoothing
-splines. The smoothing spline basis matrix is constructed by the `mgcv` package
-(CITE) before being passed to the Stan code generated by `brms`, and so the
-smoothing splines are parametrized in the same way as for frequentist models. We
-used penalized thin-plate bases with $k = 5$ basis functions -- since some of
-our predictor variables are integer-valued, choosing a low value of $k$ provides
-reasonable flexibility for modeling nonlinear relationships while preventing the
-spline from being overdetermined. Finally, the specification `by = study` in
-the smoothing term for the variable `year_c` fits separate smoothing splines
-over the variable `year_c` for each stratum defined by the `study` variable.
-Since the three different studies did not all align temporally, we allowed the
-effect to be 
+All of the terms which look like `s(variable_name, k = 5)` specify smoothing splines. The smoothing spline basis matrix is constructed by the `mgcv` package before being passed to the Stan code generated by `brms`, and so the smoothing splines are parametrized in the same way as for frequentist models. We used penalized thin-plate bases with $k = 5$ basis functions -- since some of our predictor variables are integer-valued, choosing a low value of $k$ provides reasonable flexibility for modeling nonlinear relationships while preventing the spline from being overdetermined. Finally, the specification `by = study` in the smoothing term for the variable `year_c` fits separate smoothing splines over the variable `year_c` for each stratum defined by the `study` variable. Since the three different studies did not all align temporally, we allowed the effect to be 
 
-Finally, all the terms in parenthesis with vertical bars (`|`) indicate
-random or varying effect terms. A `(1 | g)` term indicates a varying intercept
-for each unique level of the variable `g`, while a `(1 + v | g)` indicates a
-random effect of the variable `v`, which is allowed to differ for each
-unique level of the group variable `g`. Our model includes random
-intercepts for individuals (`id`) and the three different studies represented in
-our data (`study`), which allows all individuals and each of the studies to
-have different baseline effects on the model outcome. When the varying intercept
-and slope are specified together, they are assumed to be correlated, and the
-covariance matrix for the random effects is estimated.
+Finally, all the terms in parenthesis with vertical bars (`|`) indicate random or varying effect terms. A `(1 | g)` term indicates a varying intercept for each unique level of the variable `g`, while a `(1 + v | g)` indicates a random effect of the variable `v`, which is allowed to differ for each unique level of the group variable `g`. Our model includes random intercepts for individuals (`id`) and the three different studies represented in our data (`study`), which allows all individuals and each of the studies to have different baseline effects on the model outcome. When the varying intercept and slope are specified together, they are assumed to be correlated, and the covariance matrix for the random effects is estimated.
 
-We also include random intercepts for each `strain_type`, which refers to the
-influenza strain used to conduct an HAI assay: for our model, this is either
-`H1N1` or `H3N2`. Furthermore, the specification `(1 + dose | strain_type) + (1
-+ dose | strain_type:strain_name)` adds random effects (on both the baseline and
-the effect of dose) for `strain_type`, and for `strain_name` *nested within* the
-`strain_type`. In our dataset, `strain_name` refers to the specific strain that
-was used to conduct an HAI assay. In other words, the random effects for all
-H1N1 strains are allowed to share information, and the random effects for all
-H3N2 strains are allowed to share information, but information cannot be
-borrowed across the strain types. The similar terms for `vaccine_name` and
-`strain_type` imply the same effects, but varying by the strain that was used in
-the vaccine formulation an individual received, rather than the strain used for
-the HAI assay.
+We also include random intercepts for each `strain_type`, which refers to the influenza strain used to conduct an HAI assay: for our model, this is either `H1N1` or `H3N2`. Furthermore, the specification `(1 + dose | strain_type) + (1 + dose | strain_type:strain_name)` adds random effects (on both the baseline and the effect of dose) for `strain_type`, and for `strain_name` *nested within* the `strain_type`. In our dataset, `strain_name` refers to the specific strain that was used to conduct an HAI assay. In other words, the random effects for all H1N1 strains are allowed to share information, and the random effects for all H3N2 strains are allowed to share information, but information cannot be borrowed across the strain types. The similar terms for `vaccine_name` and `strain_type` imply the same effects, but varying by the strain that was used in the vaccine formulation an individual received, rather than the strain used for the HAI assay.
 
-The model is complicated, and not all combinations of random effects are
-observed in our data (in fact, they cannot be due to the update schedule
-of the influenza vaccine). That means our random effects are neither completely
-nested nor completely crossed, but we allow random effects to be correlated
-with each other where appropriate.
+[In short, our model controls for correlated measurements between individuals, for correlated responses to the same strains, and for strains of the same subtype to be more similar to each other than to the opposing subtype. The effect of dose is allowed to vary across all of these subgroups, with the same patterns of correlation.]{color="#FF2400"}
 
-Finally, the variable names specified with `_c` as a suffix have been centered
-to improve numerical estimation of the model. We performed all data
-transformation steps like log transformations and centering prior to passing any
-data to `brms` or Stan.
+The model is complicated, and not all combinations of random effects are observed in our data (in fact, they cannot be due to the update schedule of the influenza vaccine). That means our random effects are neither completely nested nor completely crossed, but we allow random effects to be correlated with each other where appropriate.
+
+Finally, the variable names specified with `_c` as a suffix have been centered to improve numerical estimation of the model. We performed all data transformation steps like log transformations and centering prior to passing any data to `brms` or Stan.
 
 ## Model likelihood and priors
 
-For the post-vaccination titer and titer increase outcomes, we used a Gaussian
-(Normal distribution) likelihood function for the model. Letting the outcome
-be $y$, we assumed that
+For the post-vaccination titer and titer increase outcomes, we used a Gaussian (Normal distribution) likelihood function for the model. Letting the outcome be $y$, we assumed that
 
-$$y_i \sim \text{Normal}\left( \mu_i, \sigma \right),$$
-where $\sigma$ is the residual variance, and $\mu_i$ is described by the `brms`
-equation above, which builds a model for the conditional mean of `y_i` given
-the predictor data.
-
-For the linear models, we used the following priors:
 $$
 \begin{aligned}
-\alpha_{(\cdot)} &\sim \text{Normal}(0, 5)\\
-\beta_{(\cdot)} &\sim \text{Normal}(0, 5) \\
-\sigma &\sim t^{+}(\nu = 3, 0, 1) \\
-L_{(\cdot)} &\sim \text{LKJ}(1)
+y[i] &\sim \text{Normal}\left( \mu[i], \sigma^2 \right) \\
+\sigma &\sim t^+(3, 0, 3) \\
+i &= i, \ldots, N
 \end{aligned}
 $$
+where $\sigma$ is the residual variance, and $\mu[i]$ is described by the `brms` equation above, which builds a model for the conditional mean of `y[i]` given the predictor data. Here, $N$ is the number of data points passed to the model and the index variable $i$ indexes the current data record.
 
-Here, $\alpha_{(\cdot)}$ are the global intercept and all of the random
-intercept parameters, which `brms` calls parameters of class "Intercept". The
-$\beta_{(\cdot)}$ are the regression parameters, which `brms` calls parameters
-of class "b". The parameter $\sigma$ is the residual variance, which has a
-Half-$t$ (the generalized location-scale Student's $t$ distribution) distribution
-because it can only be positive, and to allow for the possibility of a large
-unexplained variance. Finally, the $L_{(\cdot)}$ parameters are cholesky
-factors of the random effects correlation matrixes, which `brms` calls
-parameters of class "cor". We specify priors on the Cholesky factors of the
-correlation matrices rather than the correlation matrices themselves to improve
-numerical performance of the model and ensure our priors do not generate
-correlation matrices which are not positive semi-definite.
+[The model for the mean and the priors we used for the Gaussian outcomes are shown below.
+$$
+\begin{aligned}
+	\mu[i] &= \alpha + \beta \cdot \text{HD}[i]+f[1]\left(  \text{birth\_year\_c}[i]\right) + f[2]\left(\text{age\_c}[i]\right) + \\
+	&\quad f[3]\left(\log\text{pre\_titer}[i]\right) + f[4, \text{study}[i]]\left(\text{year\_c}[i]\right) + \\
+	&\quad u[1, \text{id}[i]] + u[2, \text{study}[i]] + \\
+	&\quad b[1, 0, \text{strain\_type}[i]] + b[1, 1, \text{strain\_type}[i]] \cdot \text{HD}[i] + \\
+	&\quad b[2, 0, \text{strain\_type}[i] \cdot \text{strain\_name}[i]] + \\
+	&\quad b[2, 1, \text{strain\_type}[i] \cdot \text{strain\_name}[i]] \cdot \text{HD}[i] + \\
+	&\quad b[3, 0, \text{vaccine\_name}[i]] + b[3, 1, \text{vaccine\_name}[i]] \cdot \text{HD}[i] + \\
+	&\quad b[4, 0, \text{strain\_type}[i] \cdot \text{vaccine\_name}[i]] + \\
+	&\quad b[4, 1, \text{strain\_type}[i] \cdot \text{vaccine\_name}[i]] \cdot \text{HD}[i] \\
+	f[j](\cdot) &= \sum_{k=1}^5 \gamma[j,k] \cdot \phi[j,k](\cdot); \quad j = 1, 2, 3 \\
+	f[4,\text{study}[i]](\text{year\_c}[i])&=\sum_{k=1}^5 \eta[k, \text{study}[i]] \cdot \phi[4,k](\text{year\_c}[i]) \\
+	\alpha &\sim \mathcal{N}(0, 5) \\
+	\beta &\sim \mathcal{N}(0, 5) \\
+	\gamma[j, k] &\sim \mathcal{N}(0, \tau[j]) \quad j = 1, 2, 3; \ k = 1, \ldots, 5\\
+	\tau[s] &\sim t^+\left(3, 0, 3\right) \\
+	\eta[k, \text{study}[i]] &\sim \mathcal{N}(0, \zeta[\text{study}[i]]) \quad k = 1, \ldots, 5\\
+	\zeta[\cdot] &\sim t^+(3, 0, 3) \\
+	u[r, \cdot] &\sim \mathcal{N}(0, \omega[r]) \quad r = 1, 2 \\
+	\omega[r] &\sim t^+(3, 0, 1)\\
+	\left(
+	\begin{array}{cc}
+		b[q, 0, \cdot] \\
+		b[q, 1, \cdot]
+	\end{array}
+\right) &\sim \mathrm{MVN} \bigg( \mathbf{0}, (\text{diag}(\psi[q])L[q])(\text{diag}(\psi[q])L[q])^T \bigg) \quad q = 1, \ldots, 4 \\
+\psi[q] &\sim t^+(3, 0, 1) \\
+L[q] &\sim \text{LKJ}(2)
+\end{aligned}
+$$
+Note that instead of using subscript notation in our model, because of the large number of nested subscripts and the use of index-variable coding, we elected to use brackets to show indexing. For example, the notation $L[q]$ in our model is identical to the common notation $L_q$, but for index variables such as in the equation for $\mu[i]$, the bracket notation avoids small text which is often difficult to read. Additionally, we use the centered dot symbol $(\cdot)$ to indicate when there are many valid arguments that would all have the exact same right hand side (RHS) in a formula. For example, $\zeta(\cdot)$ indicates that all subscripts for $\zeta$ follow the same independent distributions, and writing out another index variable would only serve to make the formula more confusing.]{color="#FF2400"}
 
-For the seroconversion and seroprotection outcomes, we used a Bernoulli
-likelihood with a logit link function. That is, we assumed that
+[In our model, the $\phi(\cdot)$ functions represent basis functions for thin plate splines. Internally, `brms` uses `mgcv` to create the spline basis design matrix, which uses a low-rank (in our case, rank $k=5$) approximation of the eigenvalue matrix to create the thin plate spline, which allows for similar performance to the full-rank eigendecomposition while substantially saving computational time by elementing dimensions with small eigenvalues which contribute little to the fitting process. Since our data values are integer-valued (year, birth year, pretiter, and age are all integer values), the maximum $k$ rank we can choose is equal to the number of unique values recorded in each variable, but we chose $k=5$ in order to preserve the first five components after eigendecomposition because this balances performance with loss of data [@wood2003; @wood2004; @wood2011; @wood2016; @wood2017; @pedersen2019].]{color="#FF2400"}
+
+[The distributions we refer to are: $\mathcal{N}(\cdot, \cdot)$ for the Normal distribution, parametrized in terms of the mean and variance; $t^+(\nu, \cdot, \cdot)$ for the location-scale **half** Student's $t$ distribution with $\nu$ degrees of freedom, which can take on only positive values; $MVN(\cdot, \cdot)$ for the multivariate normal distribution parametrized in terms of a mean vector and a covariance matrix; and $LKJ(\cdot)$ for the Lewandowski-Kurowicka-Joe distribution for Cholesky factors [@lkj-dist].]{color="#FF2400"}
+
+[To specify the covariance structures for our correlated varying effects, we used the Cholesky factor parametrization, which is more numerically stable and computationally efficient than other methods like individually parametrizing each term of the covariance matrix or specifying an inverse-Wishart prior [@standevelopmentteam2022; @stan-prior-choice]. We represent the covariance matrix, say $\Sigma$, using a Cholesky factor and scale parameter as follows:
+$$
+\begin{aligned}
+\Sigma &= \text{diag}(\sigma)\Omega_\Sigma\text{diag}(\sigma) \\
+&= \text{diag}(\sigma)(LL^T)\text{diag}(\sigma) \\
+&= \left( \text{diag}(\sigma)L \right) \left( \text{diag}(\sigma)L \right)^{T}.
+\end{aligned}
+$$
+Here, $L$ is the Cholesky factor of $\Omega$. We can then specify a strictly positive prior on $\sigma$, the scale parameter, and an LKJ prior on $L$. Specify, we use an $\mathrm{LKJ}(2)$ prior. An $\mathrm{LKJ}(1)$ indicates that all correlations are equally likely, while parameter values less than one indicate that strong correlations are more likely while parameter values greater than one indicate that strong correlations are less likely. Therefore, using a parameter value of 2 presumes slightly weaker correlations *a priori*, but large and weak correlations can still be learned from the data.]{color="#FF2400"}
+
+
+For the seroconversion and seroprotection outcomes, we used a Bernoulli likelihood with a logit link function. That is, we assumed that
 $$
 \begin{aligned}
 y_i &\sim \text{Bernoulli}(p_i), \\
@@ -305,172 +251,124 @@ p_i &= \text{logit}^{-1}\left(\mu_i\right),
 \end{aligned}
 $$
 where $\mu_i$ is again described by the right-hand side of the `brms` formula.
-For these models,
-we used similar priors as follows.
+
+[While the structure of the model for the mean is the same for the logistic regression models, we have to reduce the width of the priors because our outcome is fitted on the logit scale for the binary outcomes. Using these relatively narrow priors actually gives a more uniform prior distribution of effects, because of the nonlinear transformation of the linear predictor, which severely deflates low values and severely inflates high values. There is no residual variance to estimate in the binary outcome models.]{color="#FF2400"}
+
+[The mean structure and priors used for the logistic regression models are as follows.
 $$
 \begin{aligned}
-\alpha_{(\cdot)} &\sim \text{Normal}(0, 1)\\
-\beta_{(\cdot)} &\sim \text{Normal}(0, 1) \\
-L_{(\cdot)} &\sim \text{LKJ}(1)
+	\mu[i] &= \alpha + \beta \cdot \text{HD}[i]+f[1]\left(  \text{birth\_year\_c}[i]\right) + f[2]\left(\text{age\_c}[i]\right) + \\
+	&\quad f[3]\left(\log\text{pre\_titer}[i]\right) + f[4, \text{study}[i]]\left(\text{year\_c}[i]\right) + \\
+	&\quad u[1, \text{id}[i]] + u[2, \text{study}[i]] + \\
+	&\quad b[1, 0, \text{strain\_type}[i]] + b[1, 1, \text{strain\_type}[i]] \cdot \text{HD}[i] + \\
+	&\quad b[2, 0, \text{strain\_type}[i] \cdot \text{strain\_name}[i]] + \\
+	&\quad b[2, 1, \text{strain\_type}[i] \cdot \text{strain\_name}[i]] \cdot \text{HD}[i] + \\
+	&\quad b[3, 0, \text{vaccine\_name}[i]] + b[3, 1, \text{vaccine\_name}[i]] \cdot \text{HD}[i] + \\
+	&\quad b[4, 0, \text{strain\_type}[i] \cdot \text{vaccine\_name}[i]] + \\
+	&\quad b[4, 1, \text{strain\_type}[i] \cdot \text{vaccine\_name}[i]] \cdot \text{HD}[i] \\
+	f[j](\cdot) &= \sum_{k=1}^5 \gamma[j,k] \cdot \phi[j,k](\cdot); \quad j = 1, 2, 3 \\
+	f[4,\text{study}[i]](\text{year\_c}[i])&=\sum_{k=1}^5 \eta[k, \text{study}[i]] \cdot \phi[4,k](\text{year\_c}[i]) \\
+	\alpha &\sim \mathcal{N}(0, 1) \\
+	\beta &\sim \mathcal{N}(0, 1) \\
+	\gamma[j, k] &\sim \mathcal{N}(0, \tau[j]) \quad j = 1, 2, 3; \ k = 1, \ldots, 5\\
+	\tau[s] &\sim t^+\left(3, 0, 1\right) \\
+	\eta[k, \text{study}[i]] &\sim \mathcal{N}(0, \zeta[\text{study}[i]]) \quad k = 1, \ldots, 5\\
+	\zeta[\cdot] &\sim t^+(3, 0, 1) \\
+	u[r, \cdot] &\sim \mathcal{N}(0, \omega[r]) \quad r = 1, 2 \\
+	\omega[r] &\sim t^+(3, 0, 1)\\
+	\left(
+	\begin{array}{cc}
+		b[q, 0, \cdot] \\
+		b[q, 1, \cdot]
+	\end{array}
+\right) &\sim \mathrm{MVN} \bigg( \mathbf{0}, (\text{diag}(\psi[q])L[q])(\text{diag}(\psi[q])L[q])^T \bigg) \quad q = 1, \ldots, 4 \\
+\psi[q] &\sim t^+(3, 0, 1) \\
+L[q] &\sim \text{LKJ}(2)
 \end{aligned}
 $$
+The details on notation and priors are the same as for the Gaussian model. The only changes are for the outcome distribution, the lack of a residual unexplained variance parameter to estimate, and the narrower variances specified for the prior distributions.]{color="#FF2400"}
 
-Because our outcome is fitted on the logit scale for the binary outcomes,
-we have to reduce the width of the priors. Using these relatively narrow
-priors actually gives a more uniform prior distribution of effects,
-because of the nonlinear transformation of the linear predictor, which severely
-deflates low values and severely inflates high values. There is no residual
-variance to estimate in the binary outcome models.
+[We chose our priors with three major criteria in mind.
+1. The priors should reflect true constraints on parameters, but should not impose arbitrary constraints. So variance parameters should have strictly positive priors, correlations should be bounded between -1 and 1, etc. The parameter space of each prior is unbounded other than actual, scientific limitations of parameters.
+1. The priors should be skeptical and regularizing. The priors for all of our effects have a mode of zero -- we have effectively presupposed that there are no true effects, and any effects need to be learned from the data. This is similar to the idea of falsification in a frequentist framework -- we need the data to convince us that an effect is present, rather than presupposing an effect and working to find it.
+1. The priors should allow for large effects if the data support large effects.
+]{color="#FF2400"}
+
+[Due to our third point, for variance parameters, we have chosen half Student's $t$ priors. These are a compromise between half-Gaussian (or half-Normal) priors, which have most of their mass in the bulk of the distribution, and normal tails, and the Cauchy distribution, which has fat tails and more easily allows for large effects. The Cauchy distribution is poorly behaved and hard to sample from because of its pathological properties (e.g. it has no mean and infinite variance, which certainly does not reflect our prior beliefs about observable effects). The degrees of freedom parameter for the Student's $t$ prior controls how "Cauchy-like" the distribution is, i.e., how fat the tails are. A half-$t$ distribution with $\nu = 3$ degrees of freedom (the value we have chosen for all of our priors) provides the fattest tails that are easy to sample from without pathological problems, therefore allowing all of our parameters to become large if the data support large parameters. This principle also reflects why we chose an LKJ(2) prior for correlation matrices, as explained previously.]{color="#FF2400"}
 
 ## Model fitting
 
-We implemented our models in `brms` [@burkner2017a; @burkner2018b], an R package which interfaces with
-the `cmdstanr` R package [@gabry2023] and the `cmdstan` interface to the Stan
-probabilistic programming language [@standevelopmentteam2022]. Stan is a programming language
-designed to efficiently implement Hamiltonian Monte Carlo (HMC) for sampling
-from the posterior distribution of a Bayesian model [@betancourt2018]. HMC is a modern
-method which improves upon several limitations of other MCMC methods (such
-as random walk Metropolis-Hastings or Gibbs sampling) for models with
-continuous parameters.
+We implemented our models in `brms` [@burkner2017a; @burkner2018b], an R package which interfaces with the `cmdstanr` R package [@gabry2023] and the `cmdstan` interface to the Stan probabilistic programming language [@standevelopmentteam2022]. Stan is a programming language designed to efficiently implement Hamiltonian Monte Carlo (HMC) for sampling from the posterior distribution of a Bayesian model [@betancourt2018]. HMC is a modern method which improves upon several limitations of other MCMC methods (such as random walk Metropolis-Hastings or Gibbs sampling) for models with continuous parameters.
 
-We sampled all of our models across 16 chains (in parallel), with 500 warmup
-iterations and 1250 sampling iterations per chain, for a total of 20000
-post-warmup samples per model. We increased the adaptive delta to $0.99$ (which
-controls the ratio of accepted Metropolis proposals; increasing this parameter
-helps to prevent divergent transitions). We also seed
-the seed for each HMC run, but otherwise we used the default `cmdstan`
-control parameters.
+We sampled all of our models across 16 chains (in parallel), with 500 warmup iterations and 1250 sampling iterations per chain, for a total of 20000 post-warmup samples per model. We increased the adaptive delta to $0.99$ (which controls the ratio of accepted Metropolis proposals; increasing this parameter helps to prevent divergent transitions). We also seed the seed for each HMC run, but otherwise we used the default `cmdstan` control parameters.
 
 ## cACE calculation
 
-Our primary measure of effect size after fitting the model was the (C)ACE, or
-(Conditional) Average Causal Effect. The cACE represents the difference in
-model predictions for the two counterfactual potential outcomes. Let $y_i$
-be the observed outcome for individual $i$, and let $t_i$ be the treatment for
-individual $i$ (where $t_i \in \{\text{SD, HD}\}$). Using our fitted model,
-we can predict two counterfactual potential outcomes for individual $i$, which
-we call $\hat{y}_i(\text{HD})$, the predicted outcome if an individual had
-received the HD vaccine, and $\hat{y}_i(\text{SD})$, the predicted outcome if
-an individual had received the SD vaccine. Even though only one of these
-potential outcomes corresponds to the actual observed data, we can make
-predictions for both using the model. The individual causal effect (ICE) for
-individual $i$ is defined as
+Our primary measure of effect size after fitting the model was the (C)ACE, or (Conditional) Average Causal Effect. The cACE represents the difference in model predictions for the two counterfactual potential outcomes. Let $y_i$ be the observed outcome for individual $i$, and let $t_i$ be the treatment for individual $i$ (where $t_i \in \{\text{SD, HD}\}$). Using our fitted model, we can predict two counterfactual potential outcomes for individual $i$, which we call $\hat{y}_i(\text{HD})$, the predicted outcome if an individual had received the HD vaccine, and $\hat{y}_i(\text{SD})$, the predicted outcome if an individual had received the SD vaccine. Even though only one of these potential outcomes corresponds to the actual observed data, we can make predictions for both using the model. The individual causal effect (ICE) for individual $i$ is defined as
 $$
 \tau_i = \hat{y}_i(\text{HD}) - \hat{y}_i(\text{SD}).
 $$
 
-We can then summarize the posterior distribution of $\tau_i$ measurements
-to estimate the average causal effect (ACE). If the ACE is positive, then
-our model predicts that the HD vaccine elicits a stronger immune response on
-average in our study sample.
+We can then summarize the posterior distribution of $\tau_i$ measurements to estimate the average causal effect (ACE). If the ACE is positive, then our model predicts that the HD vaccine elicits a stronger immune response on average in our study sample.
 
-While the most common way to calculate the ACE is by taking the sample mean
-and associated 95% confidence interval over all of the calculated ICEs, in a
-Bayesian framework, we have $k$ samples (in our specific case, 20000)
-from the posterior distribution of the ICE for each individual. We can pool
-these samples either all together to obtain the posterior distribution of the
-overall ACE for our sample, or we can pool samples together within strata to
-obtain estimates for various cACEs, where "conditional"
-refers to an observation being in a specific stratum (for example, all assays
-conducted on samples given by donors who had received a vaccine containing
-CA/09-like virus particles).
+While the most common way to calculate the ACE is by taking the sample mean and associated 95% confidence interval over all of the calculated ICEs, in a Bayesian framework, we have $k$ samples (in our specific case, 20000) from the posterior distribution of the ICE for each individual. We can pool these samples either all together to obtain the posterior distribution of the overall ACE for our sample, or we can pool samples together within strata to obtain estimates for various cACEs, where "conditional" refers to an observation being in a specific stratum (for example, all assays conducted on samples given by donors who had received a vaccine containing CA/09-like virus particles).
 
-Specifically, we summarized all (c)ACEs in our study using the mean point estimate from the relevant posterior
-samples, along with the 95\% highest density continuous interval (HDCI). We
-estimated the mean and HDCI using the `ggdist` R package [@kay2024; @kay2024a], which
-(at the time of writing) calculates the HDCI using a CDF-bounded density estimator
-with a Gaussian kernel using the reflection method [@cooke1979; @loh1984]. The density estimate
-is trimmed to the bounds of the data, the
-bandwidth is estimated using the Sheather-Jones Direct Plug-In method [@sheather1991],
-and we evaluated the density estimator at 4096 grid points.
+Specifically, we summarized all (c)ACEs in our study using the mean point estimate from the relevant posterior samples, along with the 95\% highest density continuous interval (HDCI). We estimated the mean and HDCI using the `ggdist` R package [@kay2024; @kay2024a], which (at the time of writing) calculates the HDCI using a CDF-bounded density estimator with a Gaussian kernel using the reflection method [@cooke1979; @loh1984]. The density estimate is trimmed to the bounds of the data, the bandwidth is estimated using the Sheather-Jones Direct Plug-In method [@sheather1991], and we evaluated the density estimator at 4096 grid points.
 
 
 ## Effect size transformation from cACE calculation
 
-The cACE (as described in a previous section) is calculated by taking a
-difference of predicted model outcomes. Since the model predictions are in units
-of log titer measurements (regardless of whether the outcome is post-vaccination
-titer or titer increase), the cACE is expressed in log titer units. In order to
-better communicate the effect size, we transformed the cACE. As before, let $\hat{y}_i(\text{SD})$ be the predicted
-treatment effect for individual $i$ if that individual had received an SD
-vaccine, and let $\hat{y}_i(\text{HD})$ be the predicted treatment effect for
-individual $i$ if that individual had received an HD vaccine. The estimated ICE is
+The cACE (as described in a previous section) is calculated by taking a difference of predicted model outcomes. Since the model predictions are in units of log titer measurements (regardless of whether the outcome is post-vaccination titer or titer increase), the cACE is expressed in log titer units. In order to better communicate the effect size, we transformed the cACE. As before, let $\hat{y}_i(\text{SD})$ be the predicted treatment effect for individual $i$ if that individual had received an SD vaccine, and let $\hat{y}_i(\text{HD})$ be the predicted treatment effect for individual $i$ if that individual had received an HD vaccine. The estimated ICE is
 $$
 \hat{\tau}_i = \hat{y}_i(\text{HD}) - \hat{y}_i(\text{SD}),
 $$
-which represents the estimated benefit that individual $i$ would receive from
-the HD vaccine. Our model generates a posterior distribution of the estimated
-ICE for each individual
+which represents the estimated benefit that individual $i$ would receive from the HD vaccine. Our model generates a posterior distribution of the estimated ICE for each individual
 
-The (c)ACE over the study sample is
-estimated as
+The (c)ACE over the study sample is estimated as
 $$\widehat{ACE}_i = E\left(\hat{\tau}_i \right) = E\left(\hat{y}_i(\text{HD}) - \hat{y}_i(\text{SD})\right),$$
-and we compute this by pooling together the posterior distributions of the
-ICEs and summarizing them. However, each ICE is in log2-titer units, and so the
-ACE is also in log2-titer units. To facilitate interpretation, we can
-exponentiate (a monotone strictly increasing transformation) the estimated ACE to obtain an estimate in more interpretable titer units.
+and we compute this by pooling together the posterior distributions of the ICEs and summarizing them. However, each ICE is in log2-titer units, and so the ACE is also in log2-titer units. To facilitate interpretation, we can exponentiate (a monotone strictly increasing transformation) the estimated ACE to obtain an estimate in more interpretable titer units.
 
 The transformed ACE, which we (arbitrarily) denote as $\widehat{\varphi}_i$ is then
 $$
 \widehat{\varphi}_i = 2^{\tau_i} = 2^{E\left(\hat{y}_i(\text{HD}) - \hat{y}_i(\text{SD})\right)},
 $$
-and is in HAI titer units. This number represents the average treatment
-effect as a ratio of fold changes, for the results presented in the main text.
-It can be interpreted analogously for the other three outcomes we used as
-sensitivity analyses in a later section of this Supplement.
+and is in HAI titer units. This number represents the average treatment effect as a ratio of fold changes, for the results presented in the main text. It can be interpreted analogously for the other three outcomes we used as sensitivity analyses in a later section of this Supplement.
 
-
+\clearpage
 
 # Supplementary results
 
-## Descriptive analysis
+## Historical and vaccine strain information
 
-First, we conducted a descriptive analysis of the outcomes, stratified by
-vaccine dose. In order to determine how different the effect of dose was
-across the different vaccines and assay strains, we further conducted
-stratified analyses.
-
-### Birth year and age summary statistics
-
-Table @tbl-indiv shows the number of unique individuals who were recruited at
-each study site, along with summaries of their age at first enrollment in the
-study and birth year. The ages at enrollment and birth years were very similar
-across the three study sites.
+Throuhgout our manuscript and supplement, we used the abbreviated names of each strain throughout the paper in order to simplify tables and graphics. The complete strain names along with the abbreviated names are shown for H1N1 strains in @tbl-short-names-h1n1 and for H3N2 strains in @tbl-short-names-h3n2.
 
 ```{r}
-#| label: tbl-indiv
+#| label: tbl-short-names-h1n1
+#| tbl-pos: "p"
 #| tbl-cap: |
-#|   Number of unique individuals who were recruited at each study site, along
-#|   with summaries of the age at first enrollment and birth year of participants
-#|   at each study site and overall.
+#|    Abbreviatied strain names used in figures and tables, along with complete
+#|    strain names. This table shows all H1N1 strains in our study.
 
-here::here("results", "tables", "tab-indiv.Rds") |>
+here::here("results", "tables", "h1n1-strain-names-table.Rds") |>
 	readr::read_rds() |>
-	fit_flextable_to_page()
+	fit_flextable_to_page() |>
+	flextable::fontsize(size = 10, part = "all")
 ```
-
-
-
-### Cohort demographics and assays by year
-
-The study was collected at two different sites (PA and FL) from 2013/14 through
-2016/17, but moved to the UGA site in January 2017. The demographic information
-stratified by study site is shown in @tbl-study-season. The FL study site
-gave fewer HD vaccinations, but there were no noticeable differences in the
-age or birth cohort of individuals from the three study sites.
 
 ```{r}
-#| label: tbl-study-season
+#| label: tbl-short-names-h3n2
+#| tbl-pos: "p"
 #| tbl-cap: |
-#|   Demographics of the study sample stratified by the three study sites. The
-#|   only season when all three study sites recruited individuals was 2016/17.
+#|    Abbreviatied strain names used in figures and tables, along with complete
+#|    strain names. This table shows all H3N2 strains in our study.
 
-here::here("results", "tables", "demographics-studies.Rds") |>
+here::here("results", "tables", "h3n2-strain-names-table.Rds") |>
 	readr::read_rds() |>
-	fit_flextable_to_page()
+	fit_flextable_to_page() |>
+	flextable::fontsize(size = 10, part = "all")
 ```
 
-The vaccine composition for each year is shown in @tbl-strains.
+The strains included in influenza vaccines are reviewed annually based on estimates of the ability of a lab strain to elicit an immune response and antigenic similarity to strains which are predicted to circulate. If major changes in circulating strains are expected, the vaccine composition is updated to hopefully induce better immunity to the expected strains. The vaccine composition for each year is shown in @tbl-strains.
 
 ```{r}
 #| label: tbl-strains
@@ -484,35 +382,521 @@ here::here("results", "tables", "vaccines-by-season.Rds") |>
 	fit_flextable_to_page()
 ```
 
-The panel of historical assays used in each year is shown in
-@tbl-strain-years.
+The panel of historical assays used in each year is shown in @tbl-strain-years-h1n1 for the H1N1 subtype strains, and in @tbl-strain-years-h3n2 for the H3N2 subtype strains. [Note that the strains for the historical panel are chosen by our clinical research collaborators. We did not control which strains were used in each year of the study, and we used all strains available to us for analysis without omitting any. For the historical panels, strains were chosen to represent a broad spectrum of historical clades, along with representing all contemporary lineages used for vaccine development. For example, H1N1 strains cover the 1918-like clade, the 1976 Fort Dix-like strain, the pre-2009 lineage, and the 2009 pandemic-like viruses. H3N2 strains were chosen roughly as new clades emerged through time.]{color="#FF2400"}
+
+[Additionally, the influenza viruses used for HAI assays were propagated in eggs, and may have egg-derived mutations. Some H3N2 strains perform poorly [@gouma2020; @liu2021] in HAI essays due to these mutations, but we used all of the heterologous assay available.]{color="#FF2400"}
 
 ```{r}
-#| label: tbl-strain-years
+#| label: tbl-strain-years-h1n1
+#| tbl-pos: "p"
 #| tbl-cap: |
 #|   Number of assays performed using each component of the historical panel for
 #|   a given season. Over the different seasons, strains were added and removed
-#|   from the historical panel, indicated by the zeros in the table.
+#|   from the historical panel, indicated by the zeros in the table. The H1N1
+#|   strains are shown in this table.
 
-here::here("results", "tables", "assay-seasons-table.Rds") |>
+here::here("results", "tables", "h1n1-assay-seasons-table.Rds") |>
 	readr::read_rds() |>
 	fit_flextable_to_page()
 ```
-
-We used the abbreviated names of each strain throughout the paper in order to
-simplify tables and graphics. The complete strain names along with the
-abbreviated names are shown in @tbl-short-names.
 
 ```{r}
-#| label: tbl-short-names
+#| label: tbl-strain-years-h3n2
+#| tbl-pos: "p"
 #| tbl-cap: |
-#|    Abbreviatied strain names used in figures and tables, along with complete
-#|    strain names.
+#|   Number of assays performed using each component of the historical panel for
+#|   a given season. The H3N2
+#|   strains are shown in this table.
 
-here::here("results", "tables", "strain-names-table.Rds") |>
+here::here("results", "tables", "h3n2-assay-seasons-table.Rds") |>
 	readr::read_rds() |>
 	fit_flextable_to_page()
 ```
+
+\clearpage
+
+## Descriptive analysis
+
+First, we conducted a descriptive analysis of the outcomes, stratified by vaccine dose. In order to determine how different the effect of dose was across the different vaccines and assay strains, we further conducted stratified analyses.
+
+### Birth year and age summary statistics
+
+@tbl-indiv shows the number of unique individuals who were recruited at each study site, along with summaries of their age at first enrollment in the study and birth year. The ages at enrollment and birth years were very similar across the three study sites.
+
+```{r}
+#| label: tbl-indiv
+#| tbl-cap: |
+#|   Number of unique individuals who were recruited at each study site, along
+#|   with summaries of the age at first enrollment and birth year of participants
+#|   at each study site and overall.
+
+here::here("results", "tables", "tab-indiv.Rds") |>
+	readr::read_rds() |>
+	fit_flextable_to_page()
+```
+
+### Cohort demographics and assays by year
+
+The study was collected at two different sites (PA and FL) from 2013/14 through 2016/17, but moved to the UGA site in January 2017. The demographic information stratified by study site is shown in @tbl-study-season. The FL study site gave fewer HD vaccinations, but there were no noticeable differences in the age or birth cohort of individuals from the three study sites.
+
+\clearpage
+
+```{r}
+#| label: tbl-study-season
+#| tbl-cap: |
+#|   Demographics of the study sample stratified by the three study sites. The
+#|   only season when all three study sites recruited individuals was 2016/17.
+
+here::here("results", "tables", "demographics-studies.Rds") |>
+	readr::read_rds() |>
+	fit_flextable_to_page()
+```
+
+[In addition, several inviduals returned to the study site in multiple years. @tbl-repeat-visits shows the number of recurring individuals at each study site, with how many times a participant returned to the study. The PA and FL study sites ran for four years (2013/14 influenza season through 2016/17 influenza season) while the UGA study site had six years of data we could use for our secondary analysis (2016/17 influenza season through 2021/22 influenza season) and is ongoing.]{color="#FF2400"}
+
+[Since individuals were not required to choose the same vaccine (SD or HD) they
+received at their previous visit, some individuals received different doses at
+subsequent visits, which is accounted for in our statistical analyses. From
+@tbl-repeat-visits, we can see that the majority of individuals did not switch
+vaccine doses at subsequent visits, and out of all of the times an individual
+switched vaccine doses, almost all of them were switching from HD to SD
+vaccines. While a history of adverse events or side effects could account for
+switching from HD to SD vaccines, the likely explanation is the availability of
+HD vaccination at the study site.]{color="#FF2400"}
+
+[While we do not have access to detailed shipping and receiving logs along with
+individual dates of vaccination to confirm this, the study site ordered fewer HD
+vaccines than SD vaccines and it is likely than some individuals who would have
+preferred an HD vaccine received an SD vaccine since no HD vaccines were
+available. Most individuals are likely to prefer receiving an SD vaccine while
+at the study site rather than returning to receive an HD vaccine at a later
+date. To our knowledge, there are no studies, either empirical or computational,
+showing whether receiving an SD vaccination instead of HD vaccination is
+preferable (in terms of intraseason waning immunity and overall protection from
+influenza disease) to waiting to recieve an HD vaccine.]{color="#FF2400"}
+
+```{r}
+#| label: tbl-repeat-visits
+#| tbl-cap: |
+#|   [Summary statistics of how many individuals participated in the study in
+#|   multiple years at each study site. Individuals were not required to choose
+#|   the same vaccine (SD or HD) at subsequent visits, so we also show summary
+#|   statistics for the number of times individuals switched which vaccine they
+#|   received at subsequent visits.]{color="#FF2400"}
+
+here::here("results", "tables", "repeat-counts-table.Rds") |>
+	readr::read_rds() |>
+	fit_flextable_to_page() |>
+	flextable::fontsize(size = 8, part = "all")
+```
+
+### [Pre and post-vaccination titer figures]{color="#FF2400"}
+
+[In order to better conceptualize the data we use for our models, we have
+included plots of the pre and post-vaccination titers. Due to technical
+limitations with how LaTeX processes the layout for large images, the raw
+data for each vaccine strain is included in a separate figure.]{color="#FF2400"}
+
+[In each of the following figures, every person-year of data is represented as
+a line segment and a pair of points, one for the recorded pre-vaccination titer
+and one for the recorded post-vaccination titer. The line is a visual aid to
+help guage the relative titer increase for that person-year, and to more
+easily understand for which strains the relevant vaccine candidate induced
+an immunogenic response at the cohort level. Each subplot in each figure
+corresponds to one assay strain, showing all person-years of data where
+the noted vaccine was administered and a response was measured to the noted
+assay strain.]{color="#FF2400"}
+
+[The following figure numbers correspond to the listed vaccine strains. Please
+reference @tbl-short-names-h1n1 and @tbl-short-names-h3n2 for the complete strain names.]{color="#FF2400"}
+
+- [@fig-raw-ca09: Ca/09 (H1N1) vaccine strain;]{color="#FF2400"}
+- [@fig-raw-mi15: MI/15 (H1N1) vaccine strain;]{color="#FF2400"}
+- [@fig-raw-bris18: Bris/18 (H1N1) vaccine strain;]{color="#FF2400"}
+- [@fig-raw-gd19: GD/19 (H1N1) vaccine strain;]{color="#FF2400"}
+- [@fig-raw-vic19: Vic/19 (H1N1) vaccine strain;]{color="#FF2400"}
+- [@fig-raw-tx12: TX/12 (H3N2) vaccine strain;]{color="#FF2400"}
+- [@fig-raw-switz13: Switz/13 (H3N2) vaccine strain;]{color="#FF2400"}
+- [@fig-raw-hk14: HK/14 (H3N2) vaccine strain;]{color="#FF2400"}
+- [@fig-raw-sing16: Sing/16 (H3N2) vaccine strain;]{color="#FF2400"}
+- [@fig-raw-ks17: KS/17 (H3N2) vaccine strain;]{color="#FF2400"}
+- [@fig-raw-hk19: HK/19 (H3N2) vaccine strain; and]{color="#FF2400"}
+- [@fig-raw-tas20: Tas/20 (H3N2) vaccine strain.]{color="#FF2400"}
+
+
+```{r}
+#| label: fig-raw-ca09
+#| fig-pos: 'p'
+#| fig-cap: |
+#|    [Pre and post vaccination titers for all person-years where a participant
+#|    was adminstered a vaccine containing CA/09-like split inactivated virus.
+#|    Each panel shows a historical strain which was used for HAI assays, and
+#|    all H1N1 subtype historical strains that were used for running assays
+#|    against CA/09 vaccinated individual samples are shown.]{color="#FF2400"}
+
+here::here("results", "figures", "raw-data", "CA-09.png") |>
+	knitr::include_graphics()
+```
+
+```{r}
+#| label: fig-raw-mi15
+#| fig-pos: 'p'
+#| fig-cap: |
+#|    [Pre and post vaccination titers for all person-years where a participant
+#|    was adminstered a vaccine containing MI/15-like split inactivated virus.
+#|    Each panel shows a historical strain which was used for HAI assays, and
+#|    all H1N1 subtype historical strains that were used for running assays
+#|    against MI/15 vaccinated individual samples are shown.]{color="#FF2400"}
+
+here::here("results", "figures", "raw-data", "MI-15.png") |>
+	knitr::include_graphics()
+```
+
+```{r}
+#| label: fig-raw-bris18
+#| fig-pos: 'p'
+#| fig-cap: |
+#|    [Pre and post vaccination titers for all person-years where a participant
+#|    was adminstered a vaccine containing Bris/18-like split inactivated virus.
+#|    Each panel shows a historical strain which was used for HAI assays, and
+#|    all H1N1 subtype historical strains that were used for running assays
+#|    against Bris/18 vaccinated individual samples are shown.]{color="#FF2400"}
+
+here::here("results", "figures", "raw-data", "Bris-18.png") |>
+	knitr::include_graphics()
+```
+
+```{r}
+#| label: fig-raw-gd19
+#| fig-pos: 'p'
+#| fig-cap: |
+#|    [Pre and post vaccination titers for all person-years where a participant
+#|    was adminstered a vaccine containing GD/19-like split inactivated virus.
+#|    Each panel shows a historical strain which was used for HAI assays, and
+#|    all H1N1 subtype historical strains that were used for running assays
+#|    against GD/19 vaccinated individual samples are shown.]{color="#FF2400"}
+
+here::here("results", "figures", "raw-data", "GD-19.png") |>
+	knitr::include_graphics()
+```
+
+```{r}
+#| label: fig-raw-vic19
+#| fig-pos: 'p'
+#| fig-cap: |
+#|    [Pre and post vaccination titers for all person-years where a participant
+#|    was adminstered a vaccine containing Vic/19-like split inactivated virus.
+#|    Each panel shows a historical strain which was used for HAI assays, and
+#|    all H1N1 subtype historical strains that were used for running assays
+#|    against Vic/19 vaccinated individual samples are shown.]{color="#FF2400"}
+
+here::here("results", "figures", "raw-data", "Vic-19.png") |>
+	knitr::include_graphics()
+```
+
+```{r}
+#| label: fig-raw-tx12
+#| fig-pos: 'p'
+#| fig-cap: |
+#|    [Pre and post vaccination titers for all person-years where a participant
+#|    was adminstered a vaccine containing Tx/12-like split inactivated virus.
+#|    Each panel shows a historical strain which was used for HAI assays, and
+#|    all H3N2 subtype historical strains that were used for running assays
+#|    against TX/12 vaccinated individual samples are shown.]{color="#FF2400"}
+
+here::here("results", "figures", "raw-data", "TX-12.png") |>
+	knitr::include_graphics()
+```
+
+```{r}
+#| label: fig-raw-switz13
+#| fig-pos: 'p'
+#| fig-cap: |
+#|    [Pre and post vaccination titers for all person-years where a participant
+#|    was adminstered a vaccine containing Switz/13-like split inactivated virus.
+#|    Each panel shows a historical strain which was used for HAI assays, and
+#|    all H3N2 subtype historical strains that were used for running assays
+#|    against Switz/13 vaccinated individual samples are shown.]{color="#FF2400"}
+
+here::here("results", "figures", "raw-data", "Switz-13.png") |>
+	knitr::include_graphics()
+```
+
+```{r}
+#| label: fig-raw-hk14
+#| fig-pos: 'p'
+#| fig-cap: |
+#|    [Pre and post vaccination titers for all person-years where a participant
+#|    was adminstered a vaccine containing HK/14-like split inactivated virus.
+#|    Each panel shows a historical strain which was used for HAI assays, and
+#|    all H3N2 subtype historical strains that were used for running assays
+#|    against HK/14 vaccinated individual samples are shown.]{color="#FF2400"}
+
+here::here("results", "figures", "raw-data", "HK-14.png") |>
+	knitr::include_graphics()
+```
+
+```{r}
+#| label: fig-raw-sing16
+#| fig-pos: 'p'
+#| fig-cap: |
+#|    [Pre and post vaccination titers for all person-years where a participant
+#|    was adminstered a vaccine containing Sing/16-like split inactivated virus.
+#|    Each panel shows a historical strain which was used for HAI assays, and
+#|    all H3N2 subtype historical strains that were used for running assays
+#|    against Sing/16 vaccinated individual samples are shown.]{color="#FF2400"}
+
+here::here("results", "figures", "raw-data", "Sing-16.png") |>
+	knitr::include_graphics()
+```
+
+```{r}
+#| label: fig-raw-ks17
+#| fig-pos: 'p'
+#| fig-cap: |
+#|    [Pre and post vaccination titers for all person-years where a participant
+#|    was adminstered a vaccine containing KS/17-like split inactivated virus.
+#|    Each panel shows a historical strain which was used for HAI assays, and
+#|    all H3N2 subtype historical strains that were used for running assays
+#|    against KS/17 vaccinated individual samples are shown.]{color="#FF2400"}
+
+here::here("results", "figures", "raw-data", "KS-17.png") |>
+	knitr::include_graphics()
+```
+
+```{r}
+#| label: fig-raw-hk19
+#| fig-pos: 'p'
+#| fig-cap: |
+#|    [Pre and post vaccination titers for all person-years where a participant
+#|    was adminstered a vaccine containing HK/19-like split inactivated virus.
+#|    Each panel shows a historical strain which was used for HAI assays, and
+#|    all H3N2 subtype historical strains that were used for running assays
+#|    against KH/19 vaccinated individual samples are shown.]{color="#FF2400"}
+
+here::here("results", "figures", "raw-data", "HK-19.png") |>
+	knitr::include_graphics()
+```
+
+```{r}
+#| label: fig-raw-tas20
+#| fig-pos: 'p'
+#| fig-cap: |
+#|    [Pre and post vaccination titers for all person-years where a participant
+#|    was adminstered a vaccine containing Tas/20-like split inactivated virus.
+#|    Each panel shows a historical strain which was used for HAI assays, and
+#|    all H3N2 subtype historical strains that were used for running assays
+#|    against Tas/20 vaccinated individual samples are shown.]{color="#FF2400"}
+
+here::here("results", "figures", "raw-data", "Tas-20.png") |>
+	knitr::include_graphics()
+```
+
+\clearpage
+
+### [Fold change figures]{color="#FF2400"}
+
+[In addition to the previous figures, we also show the distribution of fold changes to each assay strain that were induced by each vaccine component.]{color="#FF2400"}
+
+[Similar to the previous section, in each of the following figures, every person-year of data is represented as one point, representing the fold change (i.e., post-vaccination titer divided by pre-vaccination titer) for that person in a particular season.]{color="#FF2400"}
+
+[The following figure numbers correspond to the listed vaccine strains. Please
+reference @tbl-short-names-h1n1 and @tbl-short-names-h3n2 for the complete strain names.]{color="#FF2400"}
+
+- [@fig-fc-ca09: Ca/09 (H1N1) vaccine strain;]{color="#FF2400"}
+- [@fig-fc-mi15: MI/15 (H1N1) vaccine strain;]{color="#FF2400"}
+- [@fig-fc-bris18: Bris/18 (H1N1) vaccine strain;]{color="#FF2400"}
+- [@fig-fc-gd19: GD/19 (H1N1) vaccine strain;]{color="#FF2400"}
+- [@fig-fc-vic19: Vic/19 (H1N1) vaccine strain;]{color="#FF2400"}
+- [@fig-fc-tx12: TX/12 (H3N2) vaccine strain;]{color="#FF2400"}
+- [@fig-fc-switz13: Switz/13 (H3N2) vaccine strain;]{color="#FF2400"}
+- [@fig-fc-hk14: HK/14 (H3N2) vaccine strain;]{color="#FF2400"}
+- [@fig-fc-sing16: Sing/16 (H3N2) vaccine strain;]{color="#FF2400"}
+- [@fig-fc-ks17: KS/17 (H3N2) vaccine strain;]{color="#FF2400"}
+- [@fig-fc-hk19: HK/19 (H3N2) vaccine strain; and]{color="#FF2400"}
+- [@fig-fc-tas20: Tas/20 (H3N2) vaccine strain.]{color="#FF2400"}
+
+```{r}
+#| label: fig-fc-ca09
+#| fig-pos: 'p'
+#| fig-cap: |
+#|    [Fold-change (post-vaccination titer / pre-vaccination titer)
+#|    for all person-years where a participant
+#|    was adminstered a vaccine containing CA/09-like split inactivated virus.
+#|    Each panel shows a historical strain which was used for HAI assays, and
+#|    all H1N1 subtype historical strains that were used for running assays
+#|    against CA/09 vaccinated individual samples are shown.]{color="#FF2400"}
+
+here::here("results", "figures", "raw-fc", "CA-09.png") |>
+	knitr::include_graphics()
+```
+
+```{r}
+#| label: fig-fc-mi15
+#| fig-pos: 'p'
+#| fig-cap: |
+#|    [Fold-change (post-vaccination titer / pre-vaccination titer)
+#|    for all person-years where a participant
+#|    was adminstered a vaccine containing MI/15-like split inactivated virus.
+#|    Each panel shows a historical strain which was used for HAI assays, and
+#|    all H1N1 subtype historical strains that were used for running assays
+#|    against MI/15 vaccinated individual samples are shown.]{color="#FF2400"}
+
+here::here("results", "figures", "raw-fc", "MI-15.png") |>
+	knitr::include_graphics()
+```
+
+```{r}
+#| label: fig-fc-bris18
+#| fig-pos: 'p'
+#| fig-cap: |
+#|    [Fold-change (post-vaccination titer / pre-vaccination titer)
+#|    for all person-years where a participant
+#|    was adminstered a vaccine containing Bris/18-like split inactivated virus.
+#|    Each panel shows a historical strain which was used for HAI assays, and
+#|    all H1N1 subtype historical strains that were used for running assays
+#|    against Bris/18 vaccinated individual samples are shown.]{color="#FF2400"}
+
+here::here("results", "figures", "raw-fc", "Bris-18.png") |>
+	knitr::include_graphics()
+```
+
+```{r}
+#| label: fig-fc-gd19
+#| fig-pos: 'p'
+#| fig-cap: |
+#|    [Fold-change (post-vaccination titer / pre-vaccination titer)
+#|    for all person-years where a participant
+#|    was adminstered a vaccine containing GD/19-like split inactivated virus.
+#|    Each panel shows a historical strain which was used for HAI assays, and
+#|    all H1N1 subtype historical strains that were used for running assays
+#|    against GD/19 vaccinated individual samples are shown.]{color="#FF2400"}
+
+here::here("results", "figures", "raw-fc", "GD-19.png") |>
+	knitr::include_graphics()
+```
+
+```{r}
+#| label: fig-fc-vic19
+#| fig-pos: 'p'
+#| fig-cap: |
+#|    [Fold-change (post-vaccination titer / pre-vaccination titer)
+#|    for all person-years where a participant
+#|    was adminstered a vaccine containing Vic/19-like split inactivated virus.
+#|    Each panel shows a historical strain which was used for HAI assays, and
+#|    all H1N1 subtype historical strains that were used for running assays
+#|    against Vic/19 vaccinated individual samples are shown.]{color="#FF2400"}
+
+here::here("results", "figures", "raw-fc", "Vic-19.png") |>
+	knitr::include_graphics()
+```
+
+```{r}
+#| label: fig-fc-tx12
+#| fig-pos: 'p'
+#| fig-cap: |
+#|    [Fold-change (post-vaccination titer / pre-vaccination titer)
+#|    for all person-years where a participant
+#|    was adminstered a vaccine containing Tx/12-like split inactivated virus.
+#|    Each panel shows a historical strain which was used for HAI assays, and
+#|    all H3N2 subtype historical strains that were used for running assays
+#|    against TX/12 vaccinated individual samples are shown.]{color="#FF2400"}
+
+here::here("results", "figures", "raw-fc", "TX-12.png") |>
+	knitr::include_graphics()
+```
+
+```{r}
+#| label: fig-fc-switz13
+#| fig-pos: 'p'
+#| fig-cap: |
+#|    [Fold-change (post-vaccination titer / pre-vaccination titer)
+#|    for all person-years where a participant
+#|    was adminstered a vaccine containing Switz/13-like split inactivated virus.
+#|    Each panel shows a historical strain which was used for HAI assays, and
+#|    all H3N2 subtype historical strains that were used for running assays
+#|    against Switz/13 vaccinated individual samples are shown.]{color="#FF2400"}
+
+here::here("results", "figures", "raw-fc", "Switz-13.png") |>
+	knitr::include_graphics()
+```
+
+```{r}
+#| label: fig-fc-hk14
+#| fig-pos: 'p'
+#| fig-cap: |
+#|    [Fold-change (post-vaccination titer / pre-vaccination titer)
+#|    for all person-years where a participant
+#|    was adminstered a vaccine containing HK/14-like split inactivated virus.
+#|    Each panel shows a historical strain which was used for HAI assays, and
+#|    all H3N2 subtype historical strains that were used for running assays
+#|    against HK/14 vaccinated individual samples are shown.]{color="#FF2400"}
+
+here::here("results", "figures", "raw-fc", "HK-14.png") |>
+	knitr::include_graphics()
+```
+
+```{r}
+#| label: fig-fc-sing16
+#| fig-pos: 'p'
+#| fig-cap: |
+#|    [Fold-change (post-vaccination titer / pre-vaccination titer)
+#|    for all person-years where a participant
+#|    was adminstered a vaccine containing Sing/16-like split inactivated virus.
+#|    Each panel shows a historical strain which was used for HAI assays, and
+#|    all H3N2 subtype historical strains that were used for running assays
+#|    against Sing/16 vaccinated individual samples are shown.]{color="#FF2400"}
+
+here::here("results", "figures", "raw-fc", "Sing-16.png") |>
+	knitr::include_graphics()
+```
+
+```{r}
+#| label: fig-fc-ks17
+#| fig-pos: 'p'
+#| fig-cap: |
+#|    [Fold-change (post-vaccination titer / pre-vaccination titer)
+#|    for all person-years where a participant
+#|    was adminstered a vaccine containing KS/17-like split inactivated virus.
+#|    Each panel shows a historical strain which was used for HAI assays, and
+#|    all H3N2 subtype historical strains that were used for running assays
+#|    against KS/17 vaccinated individual samples are shown.]{color="#FF2400"}
+
+here::here("results", "figures", "raw-fc", "KS-17.png") |>
+	knitr::include_graphics()
+```
+
+```{r}
+#| label: fig-fc-hk19
+#| fig-pos: 'p'
+#| fig-cap: |
+#|    [Fold-change (post-vaccination titer / pre-vaccination titer)
+#|    for all person-years where a participant
+#|    was adminstered a vaccine containing HK/19-like split inactivated virus.
+#|    Each panel shows a historical strain which was used for HAI assays, and
+#|    all H3N2 subtype historical strains that were used for running assays
+#|    against KH/19 vaccinated individual samples are shown.]{color="#FF2400"}
+
+here::here("results", "figures", "raw-fc", "HK-19.png") |>
+	knitr::include_graphics()
+```
+
+```{r}
+#| label: fig-fc-tas20
+#| fig-pos: 'p'
+#| fig-cap: |
+#|    [Fold-change (post-vaccination titer / pre-vaccination titer)
+#|    for all person-years where a participant
+#|    was adminstered a vaccine containing Tas/20-like split inactivated virus.
+#|    Each panel shows a historical strain which was used for HAI assays, and
+#|    all H3N2 subtype historical strains that were used for running assays
+#|    against Tas/20 vaccinated individual samples are shown.]{color="#FF2400"}
+
+here::here("results", "figures", "raw-fc", "Tas-20.png") |>
+	knitr::include_graphics()
+```
+
+\clearpage
 
 ### Outcome summaries
 
@@ -523,7 +907,7 @@ titer, and fold change, we computed the geometric mean and geometric SD, while
 for the seroprotection and serconversion, we computed the number and percentage
 of individuals for which each event occurred. We also computed standardized
 mean differences (SMDs) to compare the groups using the method of Yang and
-Dalton [@yang2012] using the R package `smd` [@saul2024].
+Dalton [@yang2012] via the R package `smd` [@saul2024].
 
 We did not further stratify by each assay strain during the crude analysis,
 because the low sample size and number of comparisons would greatly inflate the
@@ -544,13 +928,15 @@ decisively used to make decisions based on the qualitative guidelines alone
 
 : Suggested qualitative interpretations of the Cohen's $d$ effect sizes represented by our SMD calculations. Note that these are only rough guidelines. {#tbl-smd}
 
+\clearpage
+
 #### Pre-vaccination titer
 
 @tbl-crude-pretiter shows the crude analysis of the pre-vaccination
 titer. In contrast to the results shown in the main paper, the overall effect
-and the effects for all combined H1N1 and H3N2 strains are both near zero.
-However, for some vaccine strains, the pre-vaccination titer was clearly higher
-for the HD group than the SD group, potentially due to the effect of receiving
+and subtype overall effects are all near zero.
+For some vaccine strains, the titer was clearly higher
+for the HD group, potentially due to the effect of receiving
 HD vaccines in multiple years. We using a flexible smoothing spline to control
 for the effect of pre-vaccination titer in our main model to reduce confounding
 by pre-vaccination titer in our main results.
@@ -564,15 +950,15 @@ here::here("results", "tables", "dose-pret-comparison.Rds") |>
 	fit_flextable_to_page()
 ```
 
-
+\clearpage
 
 #### Post-vaccination titer
 
 @tbl-crude-posttiter shows the crude dose-stratified analysis of the
-post-vaccination titer outcome. We saw an overall weakly positive effect of the
-HD vaccine, compared to the SD vaccine, which matched what we saw in our
-primary adjusted analysis of the fold change. Notably, some strains showed
-a noticeable negative effect of the HD vaccine, which tended to correspond
+post-vaccination titer outcome. We saw a weakly positive effect of the
+HD vaccine overall, which matched what we saw in our
+primary adjusted analysis. Notably, some strains showed
+a negative effect of the HD vaccine, which tended to correspond
 with the strains where the HD group had higher pre-vaccination titers
 (@tbl-crude-pretiter) in the crude analysis.
 
@@ -585,7 +971,7 @@ here::here("results", "tables", "dose-postt-comparison.Rds") |>
 	fit_flextable_to_page()
 ```
 
-
+\clearpage
 
 #### Fold change
 
@@ -604,7 +990,7 @@ here::here("results", "tables", "dose-fc-comparison.Rds") |>
 	fit_flextable_to_page()
 ```
 
-
+\clearpage
 
 #### Seroprotection
 
@@ -621,7 +1007,7 @@ here::here("results", "tables", "dose-sp-comparison.Rds") |>
 	fit_flextable_to_page()
 ```
 
-
+\clearpage
 
 #### Seroconversion
 
@@ -641,7 +1027,7 @@ here::here("results", "tables", "dose-sc-comparison.Rds") |>
 	fit_flextable_to_page()
 ```
 
-
+\clearpage
 
 ## Model diagnostics
 
@@ -656,11 +1042,13 @@ of our draws were completely uncorrelated (typically draws from the posterior
 are correlated and thus have less information than independent draws)
 
 Since each of the models contains hundreds of parameters, it is not feasible to
-display every trace plot and diagnostic statistic in the summary. @tbl-diag
+display every diagnostic statistic in the summary. @tbl-diag
 contains an abbreviated summary of the most important diagnostic criteria, which
-were well within acceptable bounds ($\hat{R} \lesssim 1.01$ and both ESS
+were within acceptable bounds ($\hat{R} \lesssim 1.01$ and both ESS
 $\gtrsim 1000$ for all parameters). While there were a handful of divergent
 transitions, they were negligible compared to the total amount of samples.
+
+[The main exception is the model for the seroprotection outcome, which had a high number of divergent transitions. While a few divergences are no cause for concern, and the number of post-warmup divergences for this model was around $1\%$, this may indicate that the seroprotection outcome is more difficult to model than the others. The lower ESS values for this model also support this assertion. Since the seroconversion model sampled normally, we attribute this problem to the data collected rather than the parametrization of the model. Since we encourage the use of the titer increase and post-vaccination titer models instead, rather than the binary outcome models, we did not attempt any reparametrizations or extended sampling of the seroprotection model.]{color="#FF2400"}
 
 ```{r}
 #| label: tbl-diag
@@ -672,7 +1060,146 @@ here::here("results", "tables", "mod-diag.Rds") |>
 	fit_flextable_to_page()
 ```
 
+[Our models have many parameters (451 for the Gaussian models and 450 for the
+logistic models due to the lack of a residual variance), so we cannot show
+parameter-level diagnostics for all parameters. However, we selected a
+representative parameter of each major class to
+include representative diagnostics for each model. The parameters we selected
+are:]{color="#FF2400"}
 
+- [`b_doseHD`, the population-level slope term for the effect of HD vaccination;]{color="#FF2400"}
+- [`bs_sbirth_year_c_1`, the first population-level slope term for the smoothing spline effect of birth year;]{color="#FF2400"}
+- [`cor_strain_type__Intercept__doseHD`, the correlation between the varying
+intercept effect and the varying effect of HD vaccination for the strain type varaible;]{color="#FF2400"}
+- [`Intercept`, the population-level global intercept parameter]{color="#FF2400"};
+- [`sd_id__Intercept`, the variance parameter for the distribution of intercept effects which vary by subject ID;]{color="#FF2400"}
+- [`sd_strain_type__doseHD`, the variance parameter for the distribution of HD slope effects which vary by strain type;]{color="#FF2400"}
+- [`sd_strain_type__Intercept`, the variance parameter for the distribution of intercept effects which vary by strain type; and]{color="#FF2400"}
+- [`sds_sage_c_1`, the variance parameter for the distribution of slope effects for the smoothing spline parameters for the effect of age.]{color="#FF2400"}
+
+[Note that diagnostic statistics for every parameter can be generated from
+our provided code, and our code can easily be modified to create diagnostic
+plots for any other parameters.]{color="#FF2400"}
+
+### [Trace rank plots]{color="#FF2400"}
+
+[We show trace rank plots (also called rank histograms) for each of these parameters for the titer increase model in @fig-mcmc-trank-ti, for the post-vaccination titer model in @fig-mcmc-trank-pt, for the seroprotection model in @fig-mcmc-trank-sp, and for the seroconversion model in @fig-mcmc-trank-sc. A rank histogram is created by ranking the relative value of each draw of a parameter across all chains, binning the ranks (we used a bin size of 500), and creating a separate histogram for each chains, which are superimposed in each plot. A parameter with chains that have mixed will show histograms which constantly swap positions [@vehtari2021]. These plots indicate good mixing for each of our models, and there is no indication from these plots that hints at the higher number of divergent transitions for the seroprotection model.]{color="#FF2400"}
+
+```{r}
+#| label: fig-mcmc-trank-ti
+#| fig-pos: "p"
+#| fig-cap: |
+#|    Trace rank plot of the representative parameters from the model with
+#|    titer increase as the outcome. The histograms oscillate randomly, and
+#|    constantly swap positions, indicating good chain mixing.
+
+here::here("results", "figures", "mcmc-trank-ti.png") |>
+	knitr::include_graphics()
+```
+
+```{r}
+#| label: fig-mcmc-trank-pt
+#| fig-pos: "p"
+#| fig-cap: |
+#|    Trace rank plot of the representative parameters from the model with
+#|    post-vaccination titer as the outcome. The histograms oscillate randomly, and
+#|    constantly swap positions, indicating good chain mixing.
+
+here::here("results", "figures", "mcmc-trank-pt.png") |>
+	knitr::include_graphics()
+```
+
+```{r}
+#| label: fig-mcmc-trank-sp
+#| fig-pos: "p"
+#| fig-cap: |
+#|    Trace rank plot of the representative parameters from the model with
+#|    seroprotection as the outcome. The histograms oscillate randomly, and
+#|    constantly swap positions, indicating good chain mixing.
+
+here::here("results", "figures", "mcmc-trank-sp.png") |>
+	knitr::include_graphics()
+```
+
+```{r}
+#| label: fig-mcmc-trank-sc
+#| fig-pos: "p"
+#| fig-cap: |
+#|    Trace rank plot of the representative parameters from the model with
+#|    seroconversion as the outcome. The histograms oscillate randomly, and
+#|    constantly swap positions, indicating good chain mixing.
+
+here::here("results", "figures", "mcmc-trank-sc.png") |>
+	knitr::include_graphics()
+```
+
+\clearpage
+
+### [Prior and posterior density comparison]{color="#FF2400"}
+
+[In order to understand which parameters are affected the most by our priors,
+we compared the prior and posterior densities visually for the same set of
+representative parameters. @fig-mcmc-dens-ti shows the density comparison for
+the model with titer increase as the outcome, @fig-mcmc-dens-pt for the model with post-vaccination titer as the outcome, @fig-mcmc-dens-sp for the model with seroprotection as the outcome, and @fig-mcmc-dens-sc for the model with seroconversion as the outcome. In order to construct the densities, we sampled from the priors (without updating them with our data) using the same sampling algorithm parameters as we did for the posterior samples -- that is, we obtained 20000 prior samples. For both the prior and posterior samples, we computed the gaussian kernel density estimate across all samples for each of the representative parameters, which is the density curve shown in each of the figures.]{color="#FF2400"}
+
+[In @fig-mcmc-dens-ti, we can see that many of the parameters behaved as expected. All of the parameters except for the correlation parameter have clearly moved towards a peak, indicating strong convergence to a value away from the prior distribution. The posterior distribution for the correlation parameter, `cor_strain_type__Intercept__doseHD`, has some differences from the prior but is largely the same. This is not surprising, because these correlation parameters can often be difficult to infer. There is no real alternative prior for the
+correlation parameters to use as a sensitivity analysis (shrinking the LKJ parameter would bias our model towards more extreme correlations, whereas 2 is a sensible default), and the posterior distribution of the correlation parameter merely indicates uncertainty in the posterior distribution of the corrleation, since it is already constrained in the values which it can take. We do not expect changing the correlation parameter to strongly affect the model results.]{color="#FF2400"}
+
+While some of the variance parameters, represented here by `sd_strain_type__doseHD` and `sd_strain_type__Intercept` stay relatively similar in shape to the priors, they have more pronounced peaks. These terms are often very small (near zero) and would induce boundary convergence errors in a frequentist ML formulation of our model, so it is unsurprising that they stay relatively similar to our priors, which are close to zero, but allow for the parameter to move away from zero if the data allow this -- in our case, the data do not appear to support a random effects variance far away from zero. This boundary variance also compounds the difficults in estimating the random effects correlation parameters.]{color="#FF2400"}
+
+[The conclusions from @fig-mcmc-dens-pt are nearly identical to the conclusions from @fig-mcmc-dens-ti. We expect this, because the models are mathematically very similar.]{color="#FF2400"}
+
+[In contrast to the conclusions from @fig-mcmc-dens-ti and @fig-mcmc-dens-pt, some of the conclusions in @fig-mcmc-dens-sp are quite different. In a frequentist context, we would say that this model, with a dichotomous outcome, has much lower statistical power than the models with continuous outcomes. The majority of titers in our sample data were below 40, leading to a lack of events when we analyze seroprotection as a dichotomous outcome, especially for strains which are very antigenically different from the vaccine. We can see that the Intercept and `bs_sbirth_year_c_1` parameters have moved slightly away from the priors, but not much, indicating that we cannot learn much from the data about these parameters under this model. The random effects variance parameters (with the exception of the variance for the random effect of subject id) are all very close to zero, near the priors, indicating that these parameters are not informative for learning about the seroprotection outcome. Since our priors were chosen as regularizing, skeptical priors (that allow the effects to become large easily if large effects are suggested by the data), the difficulty of predicting our underpowered dichotomous outcome is the cause of posterior densities similar to the prior densities -- changing our priors to differently shaped skeptical priors would not make a difference. This analysis is not suggestive of any issues which would cause the higher number of divergent transitions for the seroprotection outcome.]{color="#FF2400"}
+
+```{r}
+#| label: fig-mcmc-dens-ti
+#| fig-pos: "p"
+#| fig-cap: |
+#|    Prior and posterior density plots for each of the representative
+#|    parameters for the model where titer increase was the outcome.
+
+here::here("results", "figures", "mcmc-dens-ti.png") |>
+	knitr::include_graphics()
+```
+
+```{r}
+#| label: fig-mcmc-dens-pt
+#| fig-pos: "p"
+#| fig-cap: |
+#|    Prior and posterior density plots for each of the representative
+#|    parameters for the model where post-vaccination titer was the outcome.
+
+here::here("results", "figures", "mcmc-dens-pt.png") |>
+	knitr::include_graphics()
+```
+
+```{r}
+#| label: fig-mcmc-dens-sp
+#| fig-pos: "p"
+#| fig-cap: |
+#|    Trace rank plot of the representative parameters from the model with
+#|    seroprotection as the outcome. The histograms oscillate randomly, and
+#|    constantly swap positions, indicating good chain mixing.
+
+here::here("results", "figures", "mcmc-dens-sp.png") |>
+	knitr::include_graphics()
+```
+
+```{r}
+#| label: fig-mcmc-dens-sc
+#| fig-pos: "p"
+#| fig-cap: |
+#|    Trace rank plot of the representative parameters from the model with
+#|    seroconversion as the outcome. The histograms oscillate randomly, and
+#|    constantly swap positions, indicating good chain mixing.
+
+here::here("results", "figures", "mcmc-dens-sc.png") |>
+	knitr::include_graphics()
+```
+
+[The conclusions for the seroconversion model, shown in @fig-mcmc-dens-sc, are the same as those shown in @fig-mcmc-dens-sp. The seroconversion outcome contains even less events than the seroprotection outcome, leading to angrou even larger issue with statistical power. Because the logistic regression models have so little power and many parameters did not move away from the skeptical prior distributions, we do not recommend interpreting the binary outcome results directly, which is one reason we focus on the models for titer increase as our main results.]{color="#FF2400"}
+
+\clearpage
 
 ## Homologous model results
 
@@ -695,8 +1222,6 @@ with this type of complex observational data. However, all of the point estimate
 are positive, which matches previous literature on the effect of the HD
 vaccine on the homologous response.
 
-
-
 ## Model results for other outcomes
 
 While we think that modeling titer increase most directly answers our research
@@ -718,6 +1243,7 @@ strains were included.
 
 ```{r}
 #| label: fig-post-hom
+#| fig-pos: "p"
 #| fig-cap: |
 #|    Exponentiated ACE estimates for each vaccine strain and overall. Only
 #|    homologous responses to each vaccine were considered.
@@ -730,6 +1256,7 @@ here::here("Results", "Figures", "homologous-vaccine-cate-post.png") |>
 
 ```{r}
 #| label: fig-post-all-strains
+#| fig-pos: "p"
 #| fig-cap: |
 #|    Exponentiated cACE estimates for each assay strain, within vaccine
 #|    strains
@@ -743,6 +1270,7 @@ together within each vaccine strain.
 
 ```{r}
 #| label: fig-post-vacc
+#| fig-pos: "p"
 #| fig-cap: |
 #|    Exponentiated ACE estimates for each vaccine strain and overall.
 
@@ -755,6 +1283,7 @@ assay strains for that season all pooled together.
 
 ```{r}
 #| label: fig-post-season
+#| fig-pos: "p"
 #| fig-cap: |
 #|    Exponentiated cACE for each season, over all vaccine strains and
 #|    assay strains.
@@ -762,6 +1291,8 @@ assay strains for that season all pooled together.
 here::here("Results", "Figures", "season-only-cate-post.png") |>
 	knitr::include_graphics()
 ```
+
+\clearpage
 
 ### Seroprotection
 
@@ -774,6 +1305,7 @@ strains were included.
 
 ```{r}
 #| label: fig-post-sp
+#| fig-pos: "p"
 #| fig-cap: |
 #|    Exponentiated ACE estimates for each vaccine strain and overall. Only
 #|    homologous responses to each vaccine were considered.
@@ -786,6 +1318,7 @@ here::here("Results", "Figures", "homologous-vaccine-cate-sp.png") |>
 
 ```{r}
 #| label: fig-sp-all-strains
+#| fig-pos: "p"
 #| fig-cap: |
 #|    Exponentiated cACE estimates for each assay strain, within vaccine
 #|    strains
@@ -799,6 +1332,7 @@ together within each vaccine strain.
 
 ```{r}
 #| label: fig-sp-vacc
+#| fig-pos: "p"
 #| fig-cap: |
 #|    Exponentiated ACE estimates for each vaccine strain and overall.
 
@@ -811,6 +1345,7 @@ assay strains for that season all pooled together.
 
 ```{r}
 #| label: fig-sp-season
+#| fig-pos: "p"
 #| fig-cap: |
 #|    Exponentiated cACE for each season, over all vaccine strains and
 #|    assay strains.
@@ -818,6 +1353,8 @@ assay strains for that season all pooled together.
 here::here("Results", "Figures", "season-only-cate-sp.png") |>
 	knitr::include_graphics()
 ```
+
+\clearpage
 
 ### Seroconversion
 
@@ -830,6 +1367,7 @@ strains were included.
 
 ```{r}
 #| label: fig-sc-hom
+#| fig-pos: "p"
 #| fig-cap: |
 #|    Exponentiated ACE estimates for each vaccine strain and overall. Only
 #|    homologous responses to each vaccine were considered.
@@ -842,6 +1380,7 @@ here::here("Results", "Figures", "homologous-vaccine-cate-sc.png") |>
 
 ```{r}
 #| label: fig-sc-all-strains
+#| fig-pos: "p"
 #| fig-cap: |
 #|    Exponentiated cACE estimates for each assay strain, within vaccine
 #|    strains
@@ -855,6 +1394,7 @@ together within each vaccine strain.
 
 ```{r}
 #| label: fig-sc-vacc
+#| fig-pos: "p"
 #| fig-cap: |
 #|    Exponentiated ACE estimates for each vaccine strain and overall.
 
@@ -867,6 +1407,7 @@ assay strains for that season all pooled together.
 
 ```{r}
 #| label: fig-sc-season
+#| fig-pos: "p"
 #| fig-cap: |
 #|    Exponentiated cACE for each season, over all vaccine strains and
 #|    assay strains.
@@ -875,7 +1416,9 @@ here::here("Results", "Figures", "season-only-cate-sc.png") |>
 	knitr::include_graphics()
 ```
 
-## Session information
+\clearpage
+
+# Session information
 
 The complete R session information for all of our required packages is shown
 here.
@@ -889,15 +1432,13 @@ pkgs <-
 suppressPackageStartupMessages(
 	lapply(
 		pkgs,
-		\(p) requireNamespace(p, quietly = TRUE)
+		\(p) library(p, quietly = TRUE, include.only = NULL, character.only = TRUE)
 	) |>
 		invisible()
 )
 
 sessionInfo()
 ```
-
-\clearpage
 
 # References
 ::: {#refs}

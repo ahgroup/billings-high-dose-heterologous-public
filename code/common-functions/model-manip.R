@@ -41,17 +41,25 @@ os_call <- function(os_detected, ...) {
 	invisible(out)
 }
 
-model_split <- function() {
+model_split <- function(priors = FALSE) {
 	mods <- c("mod-pt", "mod-sc", "mod-sp", "mod-ti")
 	
 	# Detect the OS and message user about it
 	this_os <- detect_os()
 	
 	for (model in mods) {
-		cur_loc <- here::here("results", "largefiles", "fits", paste0(model, ".Rds"))
-		dst_dir <- here::here("results", "models-split", model)
+		if (isTRUE(priors)) {
+			cur_loc <- here::here("results", "largefiles", "priors", paste0(model, ".Rds"))
+			dst_dir <- here::here("results", "priors-split", model)
+		} else if (isFALSE(priors)) {
+			cur_loc <- here::here("results", "largefiles", "fits", paste0(model, ".Rds"))
+			dst_dir <- here::here("results", "models-split", model)
+		} else {
+			rlang::abort("argument 'priors' should be TRUE or FALSE.")
+		}
+
 		# Make sure a directory exists to save the splitted models
-		dir.create(dst_dir, showWarnings = FALSE)
+		dir.create(dst_dir, showWarnings = FALSE, recursive = TRUE)
 		
 		# Create a string for the system command that uses the right file names
 		split_cmd <-
@@ -71,18 +79,32 @@ model_split <- function() {
 	invisible(res)
 }
 
-model_cat <- function() {
+model_cat <- function(priors = FALSE) {
 	mods <- c("mod-pt", "mod-sc", "mod-sp", "mod-ti")
 	# Make sure the destination directory exists
-	model_loc <- here::here("results", "largefiles", "mods")
-	# Make sure a directory exists to save the splitted models
+	if (isTRUE(priors)) {
+		model_loc <- here::here("results", "largefiles", "priors")
+	} else if (isFALSE(priors)) {
+		model_loc <- here::here("results", "largefiles", "mods")
+	} else {
+		rlang::abort("argument 'priors' should be TRUE or FALSE.")
+	}
 	dir.create(model_loc, showWarnings = FALSE, recursive = TRUE)
 	
 	# Detect the OS and message user about it
 	this_os <- detect_os()
 	
 	for (model in mods) {
-		split_dir <- here::here("results", "models-split", model)
+		if (isTRUE(priors)) {
+			split_dir <- here::here("results", "priors-split", model)
+		} else if (isFALSE(priors)) {
+			split_dir <- here::here("results", "models-split", model)
+		} else {
+			rlang::abort("argument 'priors' should be TRUE or FALSE.")
+		}
+		
+		# Make sure a directory exists to save the splitted models
+		dir.create(split_dir, showWarnings = FALSE, recursive = TRUE)
 		
 		# Create a string for the system command
 		cat_cmd <-

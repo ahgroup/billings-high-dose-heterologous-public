@@ -138,4 +138,72 @@ readr::write_csv(
 	file = here::here("data", "processed", "model-data.csv")
 )
 
+# ADDENDUM: Create CIVICs reporting data =======================================
+rm(list = ls())
+dat_used <- readr::read_rds(here::here("data", "processed", "model-data.Rds"))
+dat <- readr::read_rds(here::here("data", "raw", "clean-data.Rds"))
+
+# Filter the complete data to get just the people we used
+dat_used$longid <- paste0(dat_used$id, dat_used$season)
+dat$longid <- paste0(dat$subject_id, dat$season)
+
+dat_is <-
+	dat |>
+	dplyr::filter(longid %in% dat_used$longid) |>
+	dplyr::distinct(longid, .keep_all = TRUE)
+
+dat_ages <- dat_is |>
+	dplyr::group_by(subject_id) |>
+	dplyr::mutate(
+		Min_Age = min(age),
+		Max_Age = max(age)
+	) |>
+	dplyr::ungroup()
+
+dat_hsdi <-
+	dat_is |>
+	dplyr::transmute(
+		Study_Code = "Study-248_HD_IIV",
+		Subject_ID = subject_id,
+		Cohort_ID = paste(study, year, dose, sep = "_"),
+		Sex_Assigned_at_Birth = ifelse(
+			is.na(gender), "Unknown", as.character(gender)
+		),
+		Gender = "Unknown",
+		Min_Age = dat_ages$Min_Age,
+		Max_Age = dat_ages$Max_Age,
+		Subject_Age_Unit = "Years",
+		Birth_Year = as.integer(substr(dateofbirth, 1, 4)),
+		Subject_Age_Event = "Age at enrollment",
+		Subject_Phenotype = "Not Collected",
+		Subject_Location = ifelse(
+			study == "UGA", "GA", study
+		),
+		Ethnicity = ifelse(
+			race == "Hispanic",
+			"Hispanic or Latino",
+			"Not Hispanic or Latino"
+		),
+		Ethnicity = ifelse(
+			is.na(Ethnicity),
+			"Unknown",
+			Ethnicity
+		),
+		Race = dplyr::case_match(
+			race,
+			"Black" ~ "Black or African American",
+			"White" ~ "White",
+			"Hispanic" ~ "Not Specified",
+			"Other" ~ "OTH-Other",
+			NA_character_ ~ "Unknown"
+		),
+		Subject_Description = "Not Provided"
+	) |>
+	dplyr::mutate(dplyr::across(dplyr::where(is.character), as.factor))
+
+readr::write_rds(
+	dat_hsdi,
+	here::here("data", "processed", "reporting-data.Rds")
+)
+
 # END OF FILE ==================================================================

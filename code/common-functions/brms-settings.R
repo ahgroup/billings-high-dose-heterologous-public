@@ -62,23 +62,26 @@ if (available_cores >= 16) {
 
 BRMS_ITERS <- BRMS_SAMPLING + BRMS_WARMUPS
 BRMS_ADAPT_DELTA <- 0.99
-BRMS_MAX_TREEDEPTH <- 10
+BRMS_MAX_TREEDEPTH <- 15
 
 # priors for mixed effect models ===============================================
 priors_me_gaussian_outcome <- c(
 	prior(normal(0,5), class = "Intercept"),
 	prior(normal(0,5), class = "b"),
 	prior(student_t(3, 0, 1), class = "sd", lb = 0),
-	prior(lkj_corr_cholesky(1), class = "cor"),
-	prior(student_t(3, 0, 1), class = "sigma", lb = 0)
+	prior(lkj_corr_cholesky(2), class = "cor"),
+	prior(student_t(3, 0, 3), class = "sigma", lb = 0),
+	prior(student_t(3, 0, 3), class = "sds", lb = 0)
 )
 
-# The binomial models don't have a sigma/sd parameter, which will make brms mad
+# The binomial models don't have a sigma parameter, which will make brms mad
 # at us if we try to pass one.
 priors_me_binomial_outcome <- c(
 	prior(normal(0,1), class = "Intercept"),
 	prior(normal(0,1), class = "b"),
-	prior(lkj_corr_cholesky(1), class = "cor")
+	prior(lkj_corr_cholesky(2), class = "cor"),
+	prior(student_t(3, 0, 1), class = "sd", lb = 0),
+	prior(student_t(3, 0, 1), class = "sds", lb = 0)
 )
 
 
@@ -91,7 +94,8 @@ priors_fe_gaussian_outcome <- c(
 
 priors_fe_binomial_outcome <- c(
 	prior(normal(0,1), class = "Intercept"),
-	prior(normal(0,1), class = "b")
+	prior(normal(0,1), class = "b"),
+	prior(student_t(3, 0, 1), class = "sd", lb = 0)
 )
 
 # End of File ==================================================================

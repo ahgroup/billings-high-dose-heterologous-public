@@ -12,6 +12,8 @@ bibliography:
   - "pkgs.bib"
   - "mybib.bib"
 csl: "nlm_csl.csl"
+filters:
+  - highlight-text.lua
 ---
 
 ```{r setup, include=FALSE}
@@ -35,26 +37,28 @@ cate <- readr::read_rds(here::here("results", "files", "cate-formatted.Rds"))
 * W. Zane Billings$^{1,2,\land,*}$ (ORCID: 0000-0002-0184-6134);
 * Yang Ge$^{3, \land, *}$ (0000-0001-5100-0703);
 * Jessica H. Knight$^{1}$ (0000-0001-5764-7495);
-* Hayley Hemme$^{1}$ (0009-0002-6609-1390);
+* Hayley Hemme$^{1,2}$ (0009-0002-6609-1390);
 * Savannah M. Hammerton$^{1, 2}$ (0000-0003-2231-3510);
 * Amanda L. Skarlupka$^{4, \dagger}$ (0000-0002-3654-9076);
 * Wangnan Cao$^{5}$ (0000-0002-6163-2760);
 * Ye Shen$^{1}$;
-* Justin Bahl$^{1, 2}$ (0000-0001-7572-4300);
-* Paul G. Thomas$^{6}$;
-* Ted M. Ross$^{7,8}$ (0000-0003-1947-7469);
+* Justin Bahl$^{1, 2, 6, 7}$ (0000-0001-7572-4300);
+* Paul G. Thomas$^{8}$;
+* Ted M. Ross$^{9, 10}$ (0000-0003-1947-7469);
 * Andreas Handel$^{1, 2, \land}$ (0000-0002-4622-1146)
 
 **Author affiliations**  
 
 1. College of Public Health, University of Georgia, Athens, GA, USA.
-2. Center for the Ecology of Infectious Diseases, The University of Georgia, Athens, GA, USA.
+2. Center for the Ecology of Infectious Diseases, University of Georgia, Athens, GA, USA.
 3. School of Health Professions, University of Southern Mississippi, Hattiesburg, MS, USA.
 4. National Cancer Institute, Bethesda, MD, USA.
 5. School of Public Health, Peking University, Beijing, China.
-6. St. Jude Children's Research Hospital, Memphis, TN, USA.
-7. Center for Vaccines and Immunology, University of Georgia, Athens, GA, USA.
-8. Florida Research \& Innovation Center, Cleveland Clinic, Port St. Lucie, FL, USA.
+6. College of Veterinary Medicine, University of Georgia, Athens, GA, USA.
+7. Institute of Bioinformatics, University of Georgia, Athens, GA, USA.
+8. St. Jude Children's Research Hospital, Memphis, TN, USA.
+9. Center for Vaccines and Immunology, University of Georgia, Athens, GA, USA.
+10. Florida Research \& Innovation Center, Cleveland Clinic, Port St. Lucie, FL, USA.
 
 $*$ These authors (WZB and YG) contributed equally to this work.
 
@@ -69,11 +73,7 @@ the Department of Health and Human Services, or the United States government.
 
 # Abstract
 
-**Background:** Older adults often mount a weak immune response to standard inactivated influenza vaccines. To induce a stronger response and better protection, a high-dose (HD) version of the
-inactivated Fluzone vaccine is recommended for individuals >65 years of age.
-While better immunogenicity and protection against the vaccine strain has been
-shown, it is not known if the HD vaccine also induces a better antibody response
-to heterologous strains.
+**Background:** Older adults often mount a weak immune response to standard inactivated influenza vaccines. To induce a stronger response and better protection, a high-dose (HD) version of the inactivated Fluzone vaccine is recommended for individuals >65 years of age. While better immunogenicity and protection against the vaccine strain has been shown, it is not known if the HD vaccine also induces a robust antibody response to heterologous strains.
 
 **Methods:** We fit bayesian multilevel regression models to hemagglutination inhibition (HAI) antibody data from an influenza vaccine cohort spanning the 2013/14-2021/22 influenza seasons. We used this model to estimate the average causal effect (ACE) of obtaining the HD vaccine, relative to the SD vaccine.
 
@@ -88,207 +88,67 @@ induce a stronger broad response.
 
 # Introduction
 
-Influenza vaccines are an important tool for reducing the burden of seasonal
-influenza, but the average effectiveness is often less than 50\%
-[@centersfordiseasecontrolandprevention2021seasons]. Standard dose (SD) split
-inactivated vaccines, such as Sanofi Pasteur's Fluzone, comprise the majority of
-vaccines licensed in the US [@CDCVaccineList], and are formulated to contain 15
-micrograms of influenza hemagglutinin (HA) antigen protein for each strain of
-influenza included in the vaccine [@FluzoneSDInsert]. Influenza vaccines often
-induce a weak response in elderly individuals [@grohskopf2021prevention;
-@robertson2016a]. In response, Sanofi Pasteur developed a high dose (HD)
-formulation of the vaccine, Fluzone HD, which contains 60 micrograms of HA per
-strain in one dose [@centersfordiseasecontrolandpreventioncdc2010licensure;
-@falsey2009randomized].
+Influenza vaccines are an important tool for reducing the burden of seasonal influenza, but the average effectiveness is often less than 50\% [@centersfordiseasecontrolandprevention2021seasons]. Standard dose (SD) split inactivated vaccines, such as Sanofi Pasteur's Fluzone, comprise the majority of vaccines licensed in the US [@CDCVaccineList], and are formulated to contain 15 micrograms of influenza hemagglutinin (HA) antigen protein for each strain of influenza included in the vaccine [@FluzoneSDInsert]. Influenza vaccines often induce a weak response in elderly individuals [@grohskopf2021prevention; @robertson2016a]. In response, Sanofi Pasteur developed a high dose (HD) formulation of the vaccine, Fluzone HD, which contains 60 micrograms of HA per strain in one dose [@centersfordiseasecontrolandpreventioncdc2010licensure; @falsey2009randomized].
 
-In elderly individuals, HD vaccines induce a stronger homologous antibody
-response compared to SD vaccines to the influenza strains contained in the
-vaccine  [@couch2007safety;
-@falsey2009randomized; @diazgranados2013highdose; @diazgranados2014efficacy;
-@lee2021efficacy; @chang2019a; @chaves2023]. Additionally, HD vaccination is
-associated with reduced disease severity and reduced risk of complications in
-elderly individuals who contract influenza after vaccination [@chaves2023]. HD
-vaccines also have the potential to elicit stronger immune responses in younger
-individuals [@gouma2020], but younger individuals can develop protective immune
-responses with SD vaccine, and even fractional doses of SD vaccine [@lunny2021;
-@schnyder2020]. Therefore, the HD vaccine is currently only recommended for
-elderly individuals.
+In elderly individuals, HD vaccines induce a stronger homologous antibody response compared to SD vaccines to the influenza strains contained in the vaccine  [@chaves2023; @wilkinson2017a; @samson2019]. Additionally, HD vaccination is associated with reduced disease severity and reduced risk of complications in elderly individuals who contract influenza after vaccination [@chaves2023; @lee2018a]. HD vaccines also have the potential to elicit stronger immune responses in younger individuals [@gouma2020], but younger individuals can develop protective immune responses with SD vaccine, and even fractional doses of SD vaccine [@lunny2021; @schnyder2020]. Therefore, the HD vaccine is currently only recommended for elderly individuals.
 
-While several studies have shown the ability of HD vaccines to induce stronger
-antibody responses to the HA contained in the vaccine, whether HD vaccines
-induce a stronger heterologous antibody responses (cross-reactive antibodies to
-strains not included in the vaccine formulation) is uncertain.
-[@couch2007safety; @hilleman1958antibody] Since our ability to forecast which
-strains of influenza will circulate in the upcoming season is imperfect, it is
-important for influenza vaccines to induce both homologous and heterologous
-responses [@erbelding2018universal; @paules2018chasing].
+While several studies have shown the ability of HD vaccines to induce stronger antibody responses to the HA contained in the vaccine, whether HD vaccines induce a stronger heterologous antibody response (cross-reactive antibodies to strains not included in the vaccine formulation) is uncertain. [@couch2007safety; @hilleman1958antibody] Since our ability to forecast which strains of influenza will circulate in the upcoming season is imperfect, it is important for influenza vaccines to induce both homologous and heterologous responses [@erbelding2018universal; @paules2018chasing].
 
-It is not obvious if HD vaccines are expected to have a positive, negative or no
-effect on heterologous responses. A higher dose might stimulate multiple diverse
-lineages of memory B-cells, and could enhance both the strength and breadth of
-protection. However, a higher amount of HA proteins to the homologous strains
-could induce a stronger homologous response, which might out-compete and
-immuno-dominate responses to any cross-reactive or novel antigens, resulting in
-less robust heterologous responses. The potential competition among HD
-vaccine-induced B-cells or T-cells might lead to more narrow protection from
-vaccination [@angeletti2018understanding], making high-risk populations more
-vulnerable to vaccine mismatches.
+It is not obvious if HD vaccines are expected to have a positive, negative or no effect on heterologous responses. A higher dose might stimulate multiple diverse lineages of memory B-cells, and could enhance both the strength and breadth of protection. However, a higher amount of HA proteins to the homologous strains could induce a stronger homologous response, which might out-compete and immuno-dominate responses to any cross-reactive or novel antigens, resulting in less robust heterologous responses. The potential competition among HD vaccine-induced B-cells or T-cells might lead to more narrow protection from vaccination [@angeletti2018understanding], making high-risk populations more vulnerable to vaccine mismatches.
 
-Improving our understanding of the heterologous immune response to influenza
-vaccination remains a critical step in developing a broadly reactive influenza
-vaccine. In our study, we compare the antibody response between HD and SD
-vaccine recipients in a vaccine cohort study, using a panel of several
-historical influenza A strains. We found that while the HD response was higher
-for most strains, the impact was not consistent and the effect size was small,
-suggesting that HD vaccines could be further improved.
+Improving our understanding of the heterologous immune response to influenza vaccination remains a critical step in developing a broadly reactive influenza vaccine. In our study, we compare the antibody response between HD and SD vaccine recipients in a vaccine cohort study, using a panel of several historical influenza A strains. We found that while the HD response was higher for most strains, the impact was not consistent and the effect size was small, suggesting that HD vaccines could be further improved.
 
 # Methods
 
 ## Data source
 
-We used data from an ongoing human vaccination cohort study, which has been
-previously described in detail [@nunez2017impact; @carlock2019impact;
-@abreu2020iga]. The study is a prospective open cohort which allows individuals
-to enroll in multiple years (potentially non-consecutively), and has been
-conducted across three study sites. Investigators annually recruited individuals
-who had not yet received an influenza vaccine in the current season. At intake,
-individuals provided demographic information, and investigators collected blood
-samples before administering a vaccine. Individuals aged 65 and older were given
-the choice between Fluzone SD and Fluzone HD, while individuals under 65 were
-given the SD vaccine. Individuals were asked to return for post-vaccination
-blood draws either 21 days (2013/14 through 2017/18 seasons) or 28 days (2018/19 season onward) after the initial
-visit. Investigators ran hemagglutination inhibition (HAI) assays the vaccine
-strains and several historical influenza strains for each serological sample.
+We used data from an ongoing human vaccination cohort study, which has been previously described in detail [@nunez2017impact; @carlock2019impact; @abreu2020iga]. The study is a prospective open cohort which allows individuals to enroll in multiple years (potentially non-consecutively), and has been conducted across three study sites. Investigators annually recruited individuals who had not yet received an influenza vaccine in the current season [(the influenza season refers to the Northern Hemisphere fall and winter in the United States, typically ranging from October to May [@cdc-fluview])]{color="#FF2400"}. At intake, individuals provided demographic information, and investigators collected blood samples before administering a vaccine. Individuals aged 65 and older were given the choice between Fluzone SD and Fluzone HD, while individuals under 65 were given the SD vaccine. Individuals were asked to return for post-vaccination blood draws either 21 days (2013/14 through 2017/18 seasons) or 28 days (2018/19 season onward) after the initial visit. Investigators ran hemagglutination inhibition (HAI) assays the vaccine strains and several historical influenza strains for each serological sample.
 
-For our analysis, we extracted previously deidentified records for individuals
-aged 65 and older from 2013/2014 influenza season through the 2021/2022
-influenza season.
+For our analysis, we extracted previously deidentified records for individuals aged 65 and older from 2013/2014 influenza season through the 2021/2022 influenza season. [All individuals age 65 and older who provided both pre-vaccination and post-vaccination blood samples were included in our analysis.{color="#FF2400"}
 
 
 ## Data processing
 
-The raw data for our study were reciprocal HAI titer values produced by the HAI
-dilution assays described in the previous studies, along with limited
-demographic information for each participant (study site, season, age, sex,
-race, and a numeric identifier to track individuals across participation years).
-Since the SD vaccine was quadrivalent (containing two influenza B lineages)
-while the HD vaccine was trivalent (containing only a single influenza B
-lineage) for multiple years of the study, we elected to focus only on the
-heterologous response to influenza A virus strains, and excluded all data for
-influenza B strains.
+The raw data for our study were reciprocal HAI titer values produced by the HAI dilution assays described in the previous studies, along with limited demographic information for each participant (study site, season, age, sex, race, and a numeric identifier to track individuals across participation years). Since the SD vaccine was quadrivalent (containing two influenza B lineages) while the HD vaccine was trivalent (containing only a single influenza B lineage) for multiple years of the study, we elected to focus only on the heterologous response to influenza A virus strains, and excluded all data for influenza B strains. [Details on the strains included in each vaccine formulation and the number of repeated individuals are shown in the supplement.]{color="#FF2400"}
 
-The data represent a multilevel structure, where each study site recruited
-individuals, each individual could participate in multiple seasons, in each
-season an individual had a pre-vaccination and a post-vaccination serological
-sample, and investigators ran a panel of HAI assays to multiple strains on each
-serological sample. The HAI assays had a lower limit of detection (LoD) of 10
-and an upper LoD of 20480. Values below the lower LoD were coded as 5 in the raw
-data. No values in our dataset were at the upper LoD. Following previous
-studies, [@beyer2004seroprotection; @ranjeva2019agespecific] we conducted all
-analyses on the log scale, using the transformation
+The data represent a multilevel structure, where each study site recruited individuals, each individual could participate in multiple seasons, in each season an individual had a pre-vaccination and a post-vaccination serological sample, and investigators ran a panel of HAI assays to multiple strains on each serological sample. The HAI assays had a lower limit of detection (LoD) of 10 and an upper LoD of 20480. Values below the lower LoD were coded as 5 in the raw data. No values in our dataset were at the upper LoD. Following previous studies, [@beyer2004seroprotection; @ranjeva2019agespecific] we conducted all analyses on the log scale, using the transformation
 $$y = \log_2\left(\frac{\text{raw reciprocal HAI titer}}{5}\right),$$
-where $y$ is the titer variable we analyze. Using this transformation puts the
-titers on a scale of $0$ (values at the lower LoD) $, 1, 2, \ldots, 12$ (values
-at the upper LoD).
+where $y$ is the titer variable we analyze. Using this transformation puts the titers on a scale of $0$ (values below the lower LoD) $, 1, 2, \ldots, 12$ (values at the upper LoD).
 
 ## Outcome definitions
 
-We calculated four common outcomes used in influenza vaccine studies
-[@beyer2004seroprotection; @falsey2009randomized]. The primary outcome we used
-for our study was titer increase, defined as the log (base 2) fold change
-between an individual's post-vaccination and pre-vaccination titer. That is,
+We calculated four common outcomes used in influenza vaccine studies [@beyer2004seroprotection; @falsey2009randomized]. The primary outcome we used for our study was titer increase, defined as the log (base 2) fold change between an individual's post-vaccination and pre-vaccination titer. [That is, since the]{color="#FF2400"} $y$ [variable is already on the log scale,]{color="#FF2400"}
 $$
-\text{titer increase} = \log_2 \left(\frac{y_\text{post}}{y_\text{pre}}\right) = \log_2\left(y_{\text{post}}\right) - \log_2\left(y_{\text{pre}}\right).
+\text{titer increase} = y_{\text{post}} - y_{\text{pre}}.
 $$
 
-We present results for titer increase in the main manuscript. As a sensitivity
-analysis, we repeated our analysis using three additional outcomes:
-post-vaccination titer, seroprotection, and seroconversion. Seroprotection and
-seroconversion are binary outcomes, and this dichotomization leads to a loss of
-statistical power. However, these are commonly reported measures and can be
-useful for their clinical interpretation. We used standard definitions for
-seroprotection and seroconversion, with seroprotection defined as a
-post-vaccination titer greater than 1:40, that is,
+We present results for titer increase in the main manuscript. As a sensitivity analysis, we repeated our analysis using three additional outcomes: post-vaccination titer, seroprotection, and seroconversion. Seroprotection and seroconversion are binary outcomes, and this dichotomization leads to a loss of statistical power. However, these are commonly reported measures and can be useful for their clinical interpretation. We used standard definitions for seroprotection and seroconversion, with seroprotection defined as a post-vaccination titer greater than 1:40, that is,
 $$
 \mathrm{seroprotection} = I(\text{post-vaccination HAI
 titer} \geq 40),
 $$
-where $I(\cdot)$ is the indicator function. The definition of seroconversion we
-used was seroprotection in addition to a
-titer increase of 2 or higher (i.e., a fold change of 4-fold or higher), that is,
+where $I(\cdot)$ is the indicator function. The definition of seroconversion we used was seroprotection in addition to a titer increase of 2 or higher (i.e., a fold change of 4-fold or higher), that is,
 $$
 \mathrm{seroconversion} =
 \text{seroprotection } \times \ I(\text{titer increase} \geq 2).
 $$
-Results for these three additional outcomes are included in the Supplement.
+Results for these three additional outcomes are [discussed in our results, and the full details are included in the Supplement.]{color="#FF2400"}
 
 ## Statistical analyses
 
-For an initial descriptive analysis of the study population, we calculated
-summary statistics for the covariates we included in our models and for each of
-the model outcomes previously described. Summary statistics for the outcome
-variables, including analyses stratified by vaccine strain and assay strain, are
-shown in the Supplement. We conducted a crude analysis of the difference in fold
-change by dose for each vaccine strain and assay strain, also shown in the
-Supplement.
+For an initial descriptive analysis of the study population, we calculated summary statistics for the covariates we included in our models and for each of the model outcomes previously described. Summary statistics for the outcome variables, including analyses stratified by vaccine strain and assay strain, are shown in the Supplement. We conducted a crude analysis of the difference in fold change by dose for each vaccine strain and assay strain, also shown in the Supplement.
 
-For our main results, we fit bayesian multilevel regression models for each of
-the outcomes [@faraway2016extending; @mcelreath2020statistical]. Bayesian
-multilevel regression can estimate the average effect of dose in the population,
-while allowing the effect to vary across strata and flexibly controlling for
-nuisance confounders. We allowed the effect of dose to vary by vaccine strain
-and HAI assay strain, and effects for different groups were assumed to be
-correlated with a heterogeneous unstructured covariance matrix. We used random
-intercepts for subject and study site to control for baseline differences, and
-used smoothing splines to control for the effects of birth year, age,
-pre-vaccination titer, and season.
+For our main results, we fit bayesian multilevel regression models for each of the outcomes [@faraway2016extending; @mcelreath2020statistical]. bayesian multilevel regression can estimate the average effect of dose in the population, while allowing the effect to vary across strata and flexibly controlling for nuisance confounders. We allowed the effect of dose to vary by vaccine strain and HAI assay strain, and effects for different groups were assumed to be correlated with a heterogeneous unstructured covariance matrix. We used random intercepts for subject and study site to control for baseline differences, and used smoothing splines to control for the effects of birth year, age, pre-vaccination titer, and season. For more details, see the Supplement.
 
-We used these models to estimate the effect of dose on each outcome of interest
-by calculating the posterior Average Causal Effect (ACE). To do so, we compared
-each individual's predicted outcome under the dose received (HD or SD) to their
-predicted outcome for the counterfactual dose computed counterfactual HD and SD
-predictions for each individual, thereby estimating the individual causal effect
-(ICE) for each observation in the dataset. We estimated the ACE by summarizing
-the overall posterior distribution of ICEs using the mean point estimate with a
-95\% highest density credible interval (HDCI). We also computed conditional ACEs
-(cACEs) by summarizing the posterior distribution of ICEs in specific strata:
-within each season, within each vaccine strain, and within each assay strain and
-vaccine strain. In order to aid interpretation, we then base-2 exponentiated the
-ACEs and the limits of the HDCI. Each ACE represents the average difference in
-the model outcome across the full study sample between the high dose and
-standard dose vaccines, after controlling for confounders [@holland1986;
-@naimi2023]. See the Supplement for additional details on cACE calculation.
+We used these models to estimate the effect of dose on each outcome of interest by calculating the posterior Average Causal Effect (ACE). [To do so, we compared each individual's predicted outcome under the dose received (HD or SD) to their predicted outcome for the counterfactual dose, thereby estimating the individual causal effect (ICE) for each observation in the dataset.]{color="#FF2400"} We estimated the ACE by summarizing the overall posterior distribution of ICEs using the mean point estimate with a 95\% highest density credible interval (HDCI). We also computed conditional ACEs (cACEs) by summarizing the posterior distribution of ICEs in specific strata: within each season, within each vaccine strain, and within each assay strain and vaccine strain. In order to aid interpretation, we then base-2 exponentiated the ACEs and the limits of the HDCI. Each ACE represents the average difference in the model outcome across the full study sample between the high dose and standard dose vaccines, after controlling for confounders [@holland1986; @naimi2023]. See the Supplement for additional details on cACE calculation.
 
-Our study is a secondary data analysis, and the data were not collected with our
-specific research questions in mind. Therefore, a strict hypothesis testing
-framework using $p$-values is not appropriate. Any statistical tests we conduct
-will have inflated false discovery rates and limited power. Therefore, we
-implemented models in a bayesian framework, and we focus on estimating the
-effect size and uncertainy as captured by credible intervals of the dose in our
-dataset, rather than testing hypotheses.
+Our study is a secondary data analysis, and the data were not collected with our specific research questions in mind. Therefore, a strict hypothesis testing framework using $p$-values is not appropriate. Any statistical tests we conduct will have inflated false discovery rates and limited power. Therefore, we implemented models in a bayesian framework, and we focus on estimating the effect size and uncertainy as captured by credible intervals of the dose in our dataset, rather than testing hypotheses. [The primary limitation of these bayesian models is the extensive computation time, and our implementation of multilevel models using Hamiltonian Monte Carlo  does not suffer from the convergence issues or error inflation issues common to similar frequentist models [@standevelopmentteam2022; @mcelreath2020statistical].]{color="red"}
 
-Details on model specification, outcome calculation, and details of
-implementation, including full data and code to reproduce results, are included
-in the Supplement.
+Details on model specification, outcome calculation, and details of implementation, including full data and code to reproduce results, are included in the supplement.
 
 ## Implementation
 
-We conducted all of our analyses using `r version$version.string` [@base]. We
-used the `tidyverse` suite of packages for data cleaning, manipulation, and
-visualization [@tidyverse], along with the packages `tidybayes` [@tidybayes] and
-`ggdist` [@ggdist1; @ggdist2]. We used the packages `here` [@here], `renv`
-[@renv], and `box` [@box] for code management. We used `ggplot2` for generating
-all figures [@ggplot2]. We used the packages `gtsummary` [@gtsummary] and
-`flextable` [@flextable] for making all tables. We compiled our manuscript using
-Quarto version 1.5.43 [@Allaire_Quarto_2024] with the R packages `knitr`
-[@knitr1;
-@knitr2; @knitr3], and `softbib` [@softbib]. We implemented our bayesian models
-using `brms` [@brms1; @brms2; @brms3] and `cmdstanr` [@cmdstanr] with cmdstan
-version 2.34.1 [@gabry2023] as the interface to the Stan probabilistic programming
-language [@standevelopmentteam2022; @carpenter2017a]. More details on
-implementation are included in the Supplement, along with instructions for
-reproducing our results. The code and data are archived on Zenodo at this link:
-[https://doi.org/10.5281/zenodo.12666977](https://doi.org/10.5281/zenodo.12666977).
+We conducted all of our analyses using `r version$version.string` [@base]. We used the `tidyverse` suite of packages for data cleaning, manipulation, and visualization [@tidyverse], along with the packages `tidybayes` [@tidybayes] and `ggdist` [@ggdist1; @ggdist2]. We used the packages `here` [@here] and `renv` [@renv] for code management. We used `ggplot2` for generating all figures [@ggplot2]. We used the packages `gtsummary` [@gtsummary] and `flextable` [@flextable] for making all tables. We compiled our manuscript using Quarto version 1.5.43 [@Allaire_Quarto_2024] with the R packages `knitr` [@knitr1; @knitr2; @knitr3], and `softbib` [@softbib]. We implemented our bayesian models using `brms` [@brms1; @brms2; @brms3] and `cmdstanr` [@cmdstanr] with cmdstan version 2.34.1 [@gabry2023] as the interface to the Stan probabilistic programming language [@standevelopmentteam2022; @carpenter2017a]. More details on implementation are included in the Supplement, along with instructions for reproducing our results. The code and data are archived on Zenodo at this link: [https://doi.org/10.5281/zenodo.12666977](https://doi.org/10.5281/zenodo.1266697).
 
 # Results
 
@@ -300,66 +160,42 @@ reproducing our results. The code and data are archived on Zenodo at this link:
 tot_n <- readr::read_rds(here::here("results", "files", "n-indiv.Rds"))
 ```
 
-Our data come from a prospective open cohort study and span the influenza
-seasons from 2013/14 through 2021/22, and included `r tot_n` unique individuals
-across all study sites and seasons, who provided 668 total observations.
-Participants aged 65 and older were vaccinated with either Fluzone SD or HD at
-one of three study sites (Stuart, FL and Pittsburgh, PA, from 2013--2016 and the
-University of Georgia (UGA) in Athens, GA from 2016--2021). @tbl-demographics
-shows the distribution of observations, stratified by vaccine dose. The three
-study sites had similar distributions of demographic characteristics at both the
-observation and unique participant levels (see Supplement). Since we only
-include individuals 65 or older in our study, the age ranges and birth cohorts
-were similar for both dose groups. Throughout the course of the study, the
-recommended influenza vaccine composition was updated several times,
-encompassing 5 different H1N1 strains and 8 different H3N2 strains.
+Our data come from a prospective open cohort study and span the influenza seasons from 2013/14 through 2021/22, and included `r tot_n` unique individuals across all study sites and seasons, who provided 668 total observations. Participants aged 65 and older were vaccinated with either Fluzone SD or HD at one of three study sites (Stuart, FL and Pittsburgh, PA, from the 2013/14 season -- the 2016/17 season and the University of Georgia (UGA) in Athens, GA from the 2016/17 season -- 2021/22 season). @tbl-demographics shows the distribution of observations, stratified by vaccine dose. The three study sites had similar distributions of demographic characteristics at both the observation and unique participant levels (see Supplement). Since we only include individuals 65 or older in our study, the age ranges and birth cohorts were similar for both dose groups. Throughout the course of the study, the recommended influenza vaccine composition was updated several times, encompassing 5 different H1N1 strains and 8 different H3N2 strains. [A visualization of the overall trend in pre-vaccination and post-vaccination HAI titers is included in the supplement.]{color="#FF2400"}
 
 ```{r tbl-demographics}
 #| label: tbl-demographics
 #| tbl-cap: |
-#|   Number of observations in our sample, stratified by the study site.
+#|   Number of observations in our sample, stratified by the dose, and the
+#|   study site or season.
 readr::read_rds(here::here("results", "tables", "demographics.Rds")) |>
 	flextable::autofit()
 ```
 
 ## Strain-specific effects reveal differences in vaccine response patterns
 
-Our models allowed the effect of dose to vary by the assay strain used for HAI
-assays, so we first examined the strain-specific effects of dose.
+Our models allowed the effect of dose to vary by the assay strain used for HAI assays, so we first examined the strain-specific effects of dose.
 
-For the H1N1 vaccine component, the titer increase was higher for HD in all of
-the H1N1 strains except for CA/09 (@fig-all-strain-cates A), where the point
-estimates for the heterologous responses were a mix of small positive and small
-negative values. MI/15 had positive point estimates for nearly all of the assay
-strains. Bris/18 showed a negative impact of dose for the single older strain
-used for testing, and positive impact for the other strains. GD/19 and Vic/19
-had positive point estimates with almost all of the density of the interval
-estimate above 1 for the few strains they were tested against. The effect of the
-HD vaccine on the Chi/83 strain was negative for all three of the vaccines which
-it was tested against.
+For the H1N1 vaccine component, the titer increase was higher for HD in all of the H1N1 strains except for CA/09 (@fig-all-strain-cates-h1n1), where the point estimates for the heterologous responses were a mix of small positive and small negative values. MI/15 had positive point estimates for nearly all of the assay strains. Bris/18 showed a negative impact of dose for the single older strain used for testing, and positive impact for the other strains. GD/19 and Vic/19 had positive point estimates with almost all of the density of the interval estimate above 1 for the few strains they were tested against. The effect of the HD vaccine on the Chi/83 strain was negative for all three of the vaccines which it was tested against[, although the negative effect was very close to 1 for the MI/15 vaccine stratum.]{color="#FF2400"}
 
-For H3N2, the effect of dose on heterologous responses showed patterns that
-varied based on vaccine strain (@fig-all-strain-cates B). For TX/12 and
-Switz/13, dose generally had a positive effect and this tended to increase as
-the year of isolation for the assay strain became more similar to the homologous
-strain. HK/14 showed an overall similar pattern, but with point estimates that
-suggested a negative dose effect for older strains. Nearly every assay strain
-for the Sing/16 and Tas/20 vaccines showed a negative effect of HD on
-heterologous and homologous responses. For KS/17 and HK/19, dose seemed to have
-an overall small positive impact.
-
+[The effect size for our models in @fig-all-strain-cates-h1n1 and @fig-all-strain-cates-h3n2 and subsequent Figures is presented as a ratio of fold changes. An effect size greater than 1 (a "positive effect") indicates that the HD vaccine induced a higher average fold change than the SD vaccine, whereas an effect size less than 1 (a "negative effect") indicates that the HD vaccine induced a lower average fold change than the SD vaccine. An effect size of 1.25, for example, would indicate that, averaged across the population, the fold change from an HD vaccine would be 1.25 times larger than from an SD vaccine, assuming that the individuals affected stay the same in every other aspect. See the supplement for more details on the effect size.]{color="#FF2400"}
 
 ```{r}
-#| label: fig-all-strain-cates
+#| label: fig-all-strain-cates-h1n1
 #| fig-cap: |
-#|   Strain-specific ratio of HD over SD antibody responses of heterologous
-#|   strains following vaccination with the indicated vaccine strain. Values
-#|   above one indicate a better response for the HD vaccine, values below
-#|   one indicate a better response for the SD vaccine. A) H1N1 vaccine
-#|   strains. B) H3N2 vaccine strains. For more recent vaccines, only a subset
-#|   of data for heterologous responses was available.
+#|   [Strain-specific ratio of HD over SD antibody responses of heterologous strains following vaccination with the indicated vaccine strain. All strains shown in this figure are subtype H1N1. Values above one indicate a better response for the HD vaccine, values below one indicate a better response for the SD vaccine. For more recent vaccines, only a subset of data for heterologous responses was available.]{color="#FF2400"}
 knitr::include_graphics(
-	here::here("Results", "Figures", "all-strains-cate.png")
+	here::here("Results", "Figures", "all-strains-cate-h1n1.png")
+)
+```
+
+For H3N2, the effect of dose on heterologous responses showed patterns that varied based on vaccine strain (@fig-all-strain-cates-h3n2). For TX/12 and Switz/13, dose generally had a positive effect and this tended to increase as the year of isolation for the assay strain became more similar to the homologous strain. HK/14 showed an overall similar pattern, but with point estimates that suggested a negative dose effect for older strains. Nearly every assay strain for the Sing/16 and Tas/20 vaccines showed a [small]{color="#FF2400"} negative effect of HD on heterologous and homologous responses. For KS/17 and HK/19, dose seemed to have an overall small positive impact.
+
+```{r}
+#| label: fig-all-strain-cates-h3n2
+#| fig-cap: |
+#|   [Strain-specific ratio of HD over SD antibody responses of heterologous strains following vaccination with the indicated vaccine strain. All strains shown in this figure are H3N2 subtype for both the vaccines and the assay strains. Values above one indicate a better response for the HD vaccine, values below one indicate a better response for the SD vaccine. For more recent vaccines, only a subset of data for heterologous responses was available.]{color="#FF2400"}
+knitr::include_graphics(
+	here::here("Results", "Figures", "all-strains-cate-h3n2.png")
 )
 ```
 
@@ -384,22 +220,11 @@ overall_cate <-
 	dplyr::pull(est)
 ```
 
-After examining the strain-specific impact of the HD vaccine, we computed the
-overall impact of the dose on each vaccine strain, by essentially computing the
-difference in average response across all tested strains. We found a weakly
-positive overall effect of the HD vaccine for all H1N1 strains (@fig-het-vex).
-While the uncertainty in our parameter estimates is large, all of the HDCI
-estimates were consistent with a small positive benefit from the HD vaccine. For
-the H3N2 strains, the majority of vaccine strains showed a benefit for the HD
-vaccine. However, the HK/14, Sing/16, and Tas/20 vaccines all had negative point
-estimates.
-
+After examining the strain-specific impact of the HD vaccine, we computed the overall impact of the dose on each vaccine strain, [by pooling together all of the posterior samples within that stratum and calculating the average effect.]{color="#FF2400"} We found a weakly positive overall effect of the HD vaccine for all H1N1 strains (@fig-het-vex). [(The estimates in @fig-het-vex are the same as the "overall" estimates in @fig-all-strain-cates-h1n1 and @fig-all-strain-cates-h3n2 for the appropriate subtype, but presented alone to allow more detailed comparisons.)]{color="#FF2400"} While the uncertainty in our parameter estimates is large, all of the HDCI estimates were consistent with a small positive benefit from the HD vaccine. For the H3N2 strains, the majority of vaccine strains showed a benefit for the HD vaccine. However, the HK/14, Sing/16, and Tas/20 vaccines all had negative point estimates.
 
 ```{r}
 #| label: fig-het-vex
-#| fig-cap: |
-#|   Ratio of HD over SD average responses following vaccination with the
-#|   indicated vaccine strain.
+#| fig-cap: '[Vaccine-specific ratio of HD over SD antibody responses of following vaccination with the indicated vaccine strain. All individual responses were pooled together to calculate the cACE for each stratum defined by the vaccine component received by an individual. individual, listed on the y-axis.]{color="#FF2400"} Values above one indicate a better response for the HD vaccine, values below one indicate a better response for the SD vaccine.'
 knitr::include_graphics(
 	here::here("results", "figures", "heterologous-vaccine-cate.png")
 )
@@ -407,81 +232,65 @@ knitr::include_graphics(
 
 ## HD vaccines elicited stronger or equal responses in every influenza season.
 
-For our final analysis, we pooled the H1N1 and H3N2 responses for a given
-vaccine and computed an overall effect of the dose for a given vaccine in each
-season (ignoring the influenza B components).
+For our final analysis, we pooled the H1N1 and H3N2 responses for a given vaccine and computed an overall effect of the dose for a given vaccine in each season (ignoring the influenza B components).
 
-We found that an increase in dose had a positive but small impact for most
-seasons, while for a few seasons, we did not observe an impact
-(@fig-season-cates). On a vaccine-level basis, there was no indication of an
-overall detrimental effect of dose.
+We found that an increase in dose had a positive but small impact for most seasons, while for a few seasons, we did not observe an impact (@fig-season-cates). On a vaccine-level basis, there was no indication of an overall detrimental effect of dose.
 
 ```{r}
 #| label: fig-season-cates
 #| fig-cap: |
-#|   Ratio of HD over SD average responses across all influenza A strains for
-#|   a given vaccine and all heterologous responses.
+#|   [Season-specific ratio of HD over SD antibody responses of following vaccination with the indicated vaccine strain. All responses measured during a given season were pooled together to estimate the cACE with respect to the season, taking all vaccine components and historical strains into account.]{color="#FF2400"} Values above one indicate a better response for the HD vaccine, values below one indicate a better response for the SD vaccine.
 
 knitr::include_graphics(
 	here::here("Results", "Figures", "season-only-cate.png")
 )
 ```
 
+## [Sensitivity analyses]{color="#FF2400"}
+
+[We repeated the analyses shown above for the three other outcomes we defined in the Methods, i.e., post-vaccination titer, seroconversion rate, and seroprotection rate. While the numerical estimates change slightly, the results were qualitatively similar to what we see with titer increase.]{color="#FF2400"}
+
+[Specifically, the results for the post-vaccination titer outcome are qualitatively identical to the results for the titer increase outcome we present here. This is because the two models are mathematically very similar, and the differences between the two models largely disappear when we calculate contrasts of the type we present as our main result, but we include the results for the post-vaccination titer for completeness.]{color="#FF2400"}
+
+[While the trends in cACE estimates for seroprotection and seroconversion are qualitatively similar, the effect sizes are closer to one for both outcomes. This is driven by the fact that the majority of individuals in our study did not achieve seroconversion or seroprotection for many strains. So even though the HD vaccine induces a better post-vaccination titer or titer increase (which could be important for preventing infection or clinical outcomes), this additional signal is lost when we dichotomize the outcomes. For seroconversion in particular, many of the effect size estimates are close to zero because of the information loss associated with dichotomization. The full analyses of these other outcomes are shown in the supplement.]{color="#FF2400"}
 
 # Discussion
 
-We analyzed homologous and heterologous antibody responses to influenza A HD and
-SD vaccines across multiple years of influenza vaccinations.
+We analyzed homologous and heterologous antibody responses to influenza A HD and SD vaccines across multiple years of influenza vaccinations.
 
-While our estimates had high uncertainties and our secondary analyses should be
-interpreted as exploratory, our results preliminarily suggest a small but
-positive effect of the HD split-inactivated vaccine compared to the SD vaccine
-for inducing not only homologous (similar to prior results; see Supplement) but
-also better heterologous responses. However, this was not consistent and for
-some vaccine strains, there was a trend towards a negative impact for the HD
-vaccine. In general, both positive and negative effect sizes were small and most
-of the time the credible intervals included both a no-effect as well as positive
-and negative effect regions. Given that our analysis is a secondary data
-analysis of noisy observational data, and the effect sizes (increases in titer)
-for both SD and HD vaccines in our fairly heavily vaccinated population are not
-that large, the amount of uncertainty we observed is expected.
+While our estimates had high uncertainties and our secondary analyses should be interpreted as exploratory, our results preliminarily suggest a small but positive effect of the HD split-inactivated vaccine compared to the SD vaccine for inducing not only homologous (similar to prior results; see Supplement) but also better heterologous responses. However, this was not consistent and for some vaccine strains, there was a trend towards a negative impact for the HD vaccine. In general, both positive and negative effect sizes were small and most of the time the credible intervals included both a no-effect as well as positive and negative effect regions. Given that our analysis is a secondary data analysis of noisy observational data, and our observed effect sizes were small, the amount of uncertainty we observed is expected.
 
-Our results suggest that the HD vaccine does induce both better homologous and
-heterologous responses for the majority of vaccine strains and thus should be a
-continued recommendation for older individuals.
+Our results suggest that the HD vaccine does induce both better homologous and heterologous responses for the majority of vaccine strains and thus should be a continued recommendation for older individuals.
 
-Our results also suggest that the overall impact of the HD vaccine is very
-modest at inducing stronger antibody responses. Since we only examined the
-humoral immune response, if the mechanisms related to reduced disease severity
-are driven by cellular immune responses, there could be additional clinical
-benefits to the HD vaccine that cannot be learned from the data we used.
+In addition, our results also suggest that the overall impact of the HD vaccine is very modest at inducing stronger antibody responses. Since we only examined the humoral immune response, if the mechanisms related to reduced disease severity are driven by cellular immune responses [[@pleguezuelos2015; @nguyen2021a]]{color="#FF2400"},
+[there could be additional clinical benefits to the HD vaccine that cannot be learned from the data we used. We have not analyzed any markers of cellular immunity, and understanding how higher inoculum dosage could affect the breadth of the cellular immune response is critical information missing from our analysis. We also lack outcome data for the individuals in our study, since there was no surveillance component. So while HD vaccination appears to be more protective against severe disease outcomes [@chaves2023], these effects may not be mediated by the differences in immunogenicity we observe.]{color="#FF2400"}
 
-Finally, our results do not preclude a stronger beneficial effect of a higher
-vaccine dose. Assuming that a higher dose (higher than the current dose in the
-HD vaccine) would further enhance immunogenicity, we could see a stronger effect
-which is consistently elevated from the SD vaccine. Since the current HD vaccine
-seems to be tolerated well, further studies on optimal dosing in elderly
-individuals might open avenues for improved vaccine design using the relatively
-cheap split-inactivated vaccine vector.
+[While we have a large sample size and many years collected immunogenicity data for a large panel of historical strains with coverage of major antigenic clusters, we lacked detailed data on previous infection and vaccination history. While we flexibly controlled for prior antibody titers at the time of vaccination and individual random effects, modeling of the exposure history would help us discern whether the effects of response blunting due to repeat vaccination [@oidtman2021; @jones-gray2023; @moritzky2022a; @mclean2021]]{color="#FF2400"}
+[or the enhanced vaccine immunogenicity hypothesis [@bi2024; @auladell2022; @fox2022]]{color="#FF2400"}, [among other effects, are present in our data. In addition, vaccination history could be a useful proxy for healthcare-seeking behavior and willingness to receive an HD vaccine and thus could represent unobserved confounding in our data. However, the effect of unobserved confounding would have to be large to shift our observed causal effects enough (in either direction) to change our conclusions.]{color="#FF2400"}
+
+Overall, our results do not preclude a stronger beneficial effect of a higher
+vaccine dose. [If a higher vaccine dose (above the dose in the current HD vaccine) would further enhance immunogenicity, we could potentially see a stronger effect than that is consistently different from the SD vaccine. With a stronger effect size, we could better determine which heterologous responses are boosted or diminished by increasing the dose. Since the current HD vaccine seems to be tolerated well, further studies on dose escalation and optimal dosing in elderly individuals might open avenues for improved vaccine design using the relatively cheap split-inactivated vaccine vector.]{color="#FF2400"}
 
 # Acknowledgments
 
-We would like to acknowledge Michael Carlock (Cleveland Clinic, Port St. Lucie,
+We would like to thank Michael Carlock (Florida Research \& Innovation Center, Cleveland Clinic, Port St. Lucie,
 FL, USA) for assistance with obtaining data.
 
 **Conflicts of interest**: None of the authors declare any conflicts of interest.
 
-**Funding sources**: YG was supported by the Start-up Grant from the University of Southern Mississippi and NIH contract 75N93019C00052. 
-TMR is supported by the Georgia Research Alliance as an Eminent Scholar. 
+**Funding sources**:
+TMR is supported by the Georgia Research Alliance as an Eminent Scholar, and received partial support from NIH grant 75N93019C00052. 
 AH received partial support from NIH grants/contracts U01AI150747, R01AI170116, 75N93019C00052 and 75N93021C00018. 
 YS received partial support from NIH grants/contracts R35GM146612, R01AI170116 and 75N93019C00052.
+JB received partial support from grants/contracts CDC NU50CK000626, NIH 75N93021C00018 and NIH 75N93019C00052.
+PGT received partial support from NIH grant/contrant 75N93019C00052 and from ALSAC at St. Jude.
 The funders had no role in the study design, data collection and analysis, decision to publish, or preparation of the manuscript.
 
 **Author contributions**:
 
 * WZB: conceptualization, methodology, software, formal analysis, data curation, visualization, writing (original draft)
-* YG: conceptualization, methodology, software, formal analysis, data curation, writing (original draft
-* JHK: methodology
+* YG: conceptualization, methodology, software, formal analysis, data curation, writing (original draft)
+* JHK: methodology, writing (review and editing)
 * HH: writing (review and editing), validation
 * SMH: methodology, writing (review and editing), validation
 * ALS: writing (review and editing), validation

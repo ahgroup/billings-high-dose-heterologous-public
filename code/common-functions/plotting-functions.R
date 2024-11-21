@@ -12,13 +12,13 @@ get_x_axis_label_from_outcome <- function(
 								"Titer increase")
 	) {
 	if (outcome == "Post-vaccination titer") {
-		label <- "Exponentiated cACE\n(post-titer for HD / post-titer for SD)"
+		label <- "Post-titer for HD / Post-titer for SD"
 	} else if (outcome == "Seroconversion") {
-		label <- "Exponentiated cACE\n(Seroprotection odds for HD / Seroprotection odds for SD)"
+		label <- "Seroconversion odds for HD / Seroconversion odds for SD"
 	} else if (outcome == "Seroprotection") {
-		label <- "Exponentiated cACE\n(Seroconversion odds for HD / Seroconversion odds for SD)"
+		label <- "Seroprotection odds for HD / Seroprotection odds for SD"
 	} else if (outcome == "Titer increase") {
-		label <- "Exponentiated cACE\n(fold change for HD / fold change for SD)"
+		label <- "Fold change for HD / Fold change for SD"
 	} else {
 		rlang::abort("Wrong outcome provided! Check for typos.")
 	}
@@ -122,8 +122,8 @@ vaccine_cace_plot <- function(
 			panel.spacing=unit(0,"cm"),
 			strip.text = element_text(size = 32, margin = ggplot2::margin(r = 8)),
 			axis.text.y = element_text(size = 24),
-			axis.text.x = element_text(size = 24),
-			axis.title.x = element_text(size = 32, margin = ggplot2::margin(t = 12))
+			axis.text.x = element_text(size = 22),
+			axis.title.x = element_text(size = 28, margin = ggplot2::margin(t = 12))
 		) +
 		ggplot2::labs(
 			x = get_x_axis_label_from_outcome(outcome),
@@ -198,7 +198,7 @@ season_cace_plot <- function(
 			strip.text = element_text(size = 32, margin = ggplot2::margin(r = 8)),
 			axis.text.y = element_text(size = 24),
 			axis.text.x = element_text(size = 24),
-			axis.title.x = element_text(size = 32, margin = ggplot2::margin(t = 12))
+			axis.title.x = element_text(size = 28, margin = ggplot2::margin(t = 12))
 		) +
 		ggplot2::labs(
 			x = get_x_axis_label_from_outcome(outcome),
@@ -212,6 +212,8 @@ all_strains_cace_plot <- function(
 		outcome = c("Post-vaccination titer", "Seroconversion", "Seroprotection",
 								"Titer increase"),
 		strains_to_plot = c("all strains", "homologous", "heterologous"),
+		split_plot = FALSE,
+		img_path,
 		...
 ) {
 	# Make the H1N1 subplot
@@ -240,8 +242,7 @@ all_strains_cace_plot <- function(
 			linewidth = 0.75
 		) +
 		ggplot2::geom_point(
-			size = 2.5,
-			color = "black"
+			size = 2.5
 		) +
 		ggplot2::coord_cartesian(
 			xlim = c(0.6, 1.52)
@@ -292,8 +293,7 @@ all_strains_cace_plot <- function(
 			linewidth = 0.75
 		) +
 		ggplot2::geom_point(
-			size = 2.5,
-			color = "black"
+			size = 2.5
 		) +
 		ggplot2::coord_cartesian(
 			xlim = c(0.6, 1.52)
@@ -320,39 +320,77 @@ all_strains_cace_plot <- function(
 			shape = ggplot2::guide_legend(override.aes = list(size = 4))
 		)
 	
-	# Combine the two subplots together and change theme elements
-	fig1comb_noanno <-
-		(h1n1_all_strains / h3n2_all_strains) +
-		patchwork::plot_layout(heights = c(0.9, 1)) &
-		theme(
+	if (isFALSE(split_plot)) {
+		# Combine the two subplots together and change theme elements
+		fig1comb_noanno <-
+			(h1n1_all_strains / h3n2_all_strains) +
+			patchwork::plot_layout(heights = c(0.9, 1)) &
+			ggplot2::theme(
+				panel.grid.major.y = ggplot2::element_blank(),
+				panel.grid.minor.y = ggplot2::element_blank(),
+				legend.text = element_text(size = 28),
+				axis.text.x = element_text(size = 20),
+				axis.text.y = element_text(size = 12),
+				strip.text = element_text(size = 32, margin = ggplot2::margin(b = 4)),
+				axis.title.x = element_text(size = 32, margin = ggplot2::margin(t = 2)),
+				panel.spacing=unit(0.2,"cm"),
+				legend.key.size = unit(1, "cm"),
+				legend.box.spacing = unit(0.1, "cm")
+			)
+		
+		# Add the H1N1 and H3N2 labels
+		fig1comb <-
+			cowplot::ggdraw(fig1comb_noanno) +
+			cowplot::draw_label(
+				"H1N1:",
+				x = 0.055, y = 0.981,
+				size = 36,
+				fontface = "bold"
+			) +
+			cowplot::draw_label(
+				"H3N2:",
+				x = 0.055, y = 0.55,
+				size = 36,
+				fontface = "bold"
+			)
+		
+		# Save and return
+		invisible(save_plots(fig1comb, ..., img_path = img_path))
+	} else if (isTRUE(split_plot)) {
+		add_theme <- ggplot2::theme(
 			panel.grid.major.y = ggplot2::element_blank(),
 			panel.grid.minor.y = ggplot2::element_blank(),
-			legend.text = element_text(size = 28),
-			axis.text.x = element_text(size = 20),
-			axis.text.y = element_text(size = 12),
-			strip.text = element_text(size = 32, margin = ggplot2::margin(b = 4)),
-			axis.title.x = element_text(size = 32, margin = ggplot2::margin(t = 2)),
+			legend.text = element_text(size = 14),
+			axis.text.x = element_text(size = 16),
+			axis.text.y = element_text(size = 10),
+			strip.text = element_text(size = 24, margin = ggplot2::margin(b = 4)),
+			axis.title.x = element_text(size = 20, margin = ggplot2::margin(t = 2)),
 			panel.spacing=unit(0.2,"cm"),
 			legend.key.size = unit(1, "cm"),
-			legend.box.spacing = unit(0.1, "cm")
+			legend.box.spacing = unit(0.1, "cm"),
+			legend.position = "bottom"
 		)
-	
-	# Add the H1N1 and H3N2 labels
-	fig1comb <-
-		cowplot::ggdraw(fig1comb_noanno) +
-		cowplot::draw_label(
-			"H1N1:",
-			x = 0.055, y = 0.981,
-			size = 36,
-			fontface = "bold"
-		) +
-		cowplot::draw_label(
-			"H3N2:",
-			x = 0.055, y = 0.55,
-			size = 36,
-			fontface = "bold"
+		
+		# Write the code that saves the two plots separately
+		fig_h1 <- h1n1_all_strains + add_theme +
+			ggplot2::labs(
+				x = get_x_axis_label_from_outcome(outcome),
+				y = NULL,
+				color = NULL,
+				shape = NULL,
+				linetype = NULL
+			) +
+			ggplot2::guides(
+				shape = ggplot2::guide_legend(override.aes = list(size = 4))
+			)
+		fig_h3 <- h3n2_all_strains + add_theme
+		
+		save_plots(fig_h1, img_path = paste0(img_path, "-h1n1"))
+		save_plots(fig_h3, img_path = paste0(img_path, "-h3n2"))
+		invisible(list(fig_h1, fig_h3))
+	} else {
+		rlang::abort(
+			paste("'split_plot' should be TRUE or FALSE, not", split_plot)
 		)
-	
-	# Save and return
-	invisible(save_plots(fig1comb, ...))
+	}
 }

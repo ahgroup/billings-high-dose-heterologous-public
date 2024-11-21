@@ -10,7 +10,7 @@
 # In contrast to the previous modeling approach, all strains are fitted within
 # the same model, and we allow the random effects to handle differences across
 # the strains.
-# Models rerun on: 2024-04-10
+# Models rerun on: 2024-10-14
 ###
 
 # Setup ========================================================================
@@ -61,7 +61,7 @@ fit_me_models <- function(dat) {
 		seed = BRMS_SEED,
 		control = list(
 			adapt_delta = BRMS_ADAPT_DELTA,
-			max_depth = BRMS_MAX_TREEDEPTH
+			max_treedepth = BRMS_MAX_TREEDEPTH
 		)
 	)
 	
@@ -93,7 +93,7 @@ fit_me_models <- function(dat) {
 		seed = BRMS_SEED,
 		control = list(
 			adapt_delta = BRMS_ADAPT_DELTA,
-			max_depth = BRMS_MAX_TREEDEPTH
+			max_treedepth = BRMS_MAX_TREEDEPTH
 		)
 	)
 	
@@ -125,7 +125,7 @@ fit_me_models <- function(dat) {
 		seed = BRMS_SEED,
 		control = list(
 			adapt_delta = BRMS_ADAPT_DELTA,
-			max_depth = BRMS_MAX_TREEDEPTH
+			max_treedepth = BRMS_MAX_TREEDEPTH
 		)
 	)
 	
@@ -157,7 +157,7 @@ fit_me_models <- function(dat) {
 		seed = BRMS_SEED,
 		control = list(
 			adapt_delta = BRMS_ADAPT_DELTA,
-			max_depth = BRMS_MAX_TREEDEPTH
+			max_treedepth = BRMS_MAX_TREEDEPTH
 		)
 	)
 	
@@ -184,8 +184,6 @@ main <- function(ME = TRUE) {
 	invisible(TRUE)
 }
 
-# TODO fix parallel processing setup to dynamically adjust # of cores passed
-# to brms
 main(
 	ME = TRUE
 )

@@ -270,20 +270,13 @@ get_cates_for_all_models <- function(.data, model_list, model_names) {
 main <- function() {
 	rlang::inform(crayon::green("Loading data and models."))
 	
-	# Run the model de-chunker if necessary
+	# Run the model de-chunker
 	mod_base <- here::here(largefile_path, "mods")
-	if (length(list.files(mod_base)) != 4) {
-		crayon::yellow(
-			"Reassembling large model objects! They will be saved at:\n\t",
-			mod_base
-		) |> rlang::inform()
-		model_cat()
-	} else {
-		crayon::green(
-			"Large model objects found at:\n\t",
-			mod_base
-		) |> rlang::inform()
-	}
+	crayon::yellow(
+		"Reassembling large model objects! They will be saved at:\n\t",
+		mod_base
+	) |> rlang::inform()
+	model_cat()
 	
 	# Load the models
 	save_pth <- here::here(res_path, "files", "all-cates-combined.Rds")

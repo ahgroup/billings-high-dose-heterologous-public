@@ -320,32 +320,29 @@ strain_names <-
 		.keep = "none"
 	) |>
 	dplyr::arrange(`Strain name`) |>
-	dplyr::distinct() |>
-	# Add the stupid row number or it won't let me pivot wider
-	dplyr::mutate(
-		i = dplyr::row_number(),
-		.by = Subtype
-	) |>
-	tidyr::pivot_wider(
-		names_from = Subtype,
-		values_from = c(`Strain name`, `Short name`),
-		names_glue = "{Subtype}_{.value}"
-	) |>
-	# Sort the columns and drop the stupid row number
-	dplyr::select(
-		`H1N1_Strain name`,
-		`H1N1_Short name`,
-		`H3N2_Strain name`,
-		`H3N2_Short name`
-	) |>
-	flextable::flextable() |>
-	flextable::separate_header(split = "_", fixed = TRUE) |>
-	flextable::hline(part = "header") |>
-	flextable::vline(j = 2, part = "all")
+	dplyr::distinct()
+
+strain_names_h1n1 <-
+	strain_names |>
+	dplyr::filter(Subtype == "H1N1") |>
+	dplyr::select(-Subtype) |>
+	flextable::flextable()
+
+strain_names_h3n2 <-
+	strain_names |>
+	dplyr::filter(Subtype == "H3N2") |>
+	dplyr::select(-Subtype) |>
+	flextable::flextable()
 
 readr::write_rds(
-	strain_names,
-	here::here("results", "tables", "strain-names-table.Rds"),
+	strain_names_h1n1,
+	here::here("results", "tables", "h1n1-strain-names-table.Rds"),
+	compress = "gz"
+)
+
+readr::write_rds(
+	strain_names_h3n2,
+	here::here("results", "tables", "h3n2-strain-names-table.Rds"),
 	compress = "gz"
 )
 
@@ -753,7 +750,6 @@ pret_dose_tbl <- crude_analysis(
 		"(± geometric standard deviation)."
 	)
 )
-pret_dose_tbl
 
 readr::write_rds(
 	pret_dose_tbl,
@@ -771,7 +767,6 @@ postt_dose_tbl <- crude_analysis(
 		"(± geometric standard deviation)."
 	)
 )
-postt_dose_tbl
 
 readr::write_rds(
 	postt_dose_tbl,
@@ -789,7 +784,6 @@ fc_dose_tbl <- crude_analysis(
 		"Geometric mean (± geometric standard deviation)."
 	)
 )
-fc_dose_tbl
 
 readr::write_rds(
 	fc_dose_tbl,
@@ -807,7 +801,6 @@ sp_dose_tbl <- crude_analysis(
 		"n (%)."
 	)
 )
-sp_dose_tbl
 
 readr::write_rds(
 	sp_dose_tbl,
@@ -825,12 +818,224 @@ sc_dose_tbl <- crude_analysis(
 		"n (%)."
 	)
 )
-sc_dose_tbl
 
 readr::write_rds(
 	sc_dose_tbl,
 	here::here("results", "tables", "dose-sc-comparison.Rds"),
 	compress = "gz"
 )
+
+# ---- Raw data figure -----
+library(ggplot2)
+# A little bit of preprocessing before plotting
+set.seed(101)
+plot_dat <-
+	dat |>
+	dplyr::select(
+		id, season, vaccine_name, strain_name, strain_type,
+		pretiter, posttiter, dose
+	) |>
+	# Get all HAI values as one column so pre/post can go on x axis
+	tidyr::pivot_longer(
+		c(pretiter, posttiter),
+		names_to = "timing",
+		values_to = "HAI"
+	) |>
+	dplyr::mutate(
+		# Clean up x axis labels to save space
+		timing = factor(
+			timing,
+			levels = c("pretiter", "posttiter"),
+			labels = c("Pre", "Post")
+		),
+		dose_timing = factor(
+			paste(dose, timing),
+			levels = c(
+				"SD Pre",
+				"SD Post",
+				"HD Pre",
+				"HD Post"
+			),
+			labels = c(
+				"Pre (SD)",
+				"Post (SD)",
+				"Pre (HD)",
+				"Post (HD)"
+			)
+		),
+		# Add manual jitter -- ggplot converts factor x axis to integer anyways
+		# so this is how it would do it. We do it manually to ensure lines and
+		# points get the same amount of jitter.
+		# For this x axis points around 0 will be Pre and around 1 will be Post,
+		# we can manually change the plot labels to words.
+		x_j = as.integer(dose_timing) + runif(dplyr::n(), -0.25, +0.25),
+		# Also jitter the HAIs, but we have to do it on the log scale since that's
+		# what we're plotting, and then put it back on natural scale to pass to
+		# ggplot or else it can't create the log scale correctly.
+		HAI_j = 5 * 2 ^ (log2(HAI / 5) + runif(dplyr::n(), -0.15, +0.15)),
+		# Create a grouping variable to make sure person-years all get their own
+		# point and line
+		unique_id = paste(id, season, sep = "_")
+	)
+
+# Function to create one raw data plot
+plot_fcn <- function(data, title) {
+	plt <-
+		data |>
+		ggplot2::ggplot() +
+		ggplot2::aes(
+			x = x_j, y = HAI_j, group = unique_id,
+			shape = dose, color = dose
+		) +
+		ggplot2::geom_line(
+			color = "black",
+			alpha = 0.1
+		) +
+		ggplot2::geom_point(
+			size = 3,
+			alpha = 0.25
+		) +
+		ggplot2::facet_wrap(~strain_name, ncol = 4, scales = "free_x") +
+		ggplot2::scale_x_continuous(
+			breaks = c(1, 2, 3, 4),
+			minor_breaks = NULL,
+			expand = c(0, 0),
+			limits = c(0.5, 4.5),
+			labels = c("Pre\nSD", "Post\nSD", "Pre\nHD", "Post\nHD")
+		) +
+		ggplot2::scale_y_continuous(
+			trans = "log2",
+			breaks = 5 * 2 ^ seq(0, 10, 2)
+		) +
+		ggplot2::scale_color_brewer(palette = "Dark2") +
+		hgp::theme_ms() +
+		ggplot2::labs(
+			x = NULL,
+			y = "HAI titer",
+			title = paste0("Vaccine: ", title)
+		) +
+		ggplot2::guides(
+			color = ggplot2::guide_legend(override.aes = list(alpha = 1))
+		)
+	
+	return(plt)
+}
+
+# Create a separate raw data plot for each vaccine strain
+raw_data_plot_df <-
+	plot_dat |>
+	tidyr::nest(plt_data = -vaccine_name) |>
+	dplyr::mutate(plt = purrr::map2(plt_data, vaccine_name, plot_fcn))
+
+# Save raw data plots as png
+purrr::walk2(
+	raw_data_plot_df$plt, raw_data_plot_df$vaccine_name,
+	\(plt, y) ggplot2::ggsave(
+		here::here(
+			"results", "figures", "raw-data",
+			paste0(gsub("/", "-", y), ".png")
+		),
+		plot = plt,
+		width = 13,
+		height = 14,
+		units = "in"
+	)
+)
+
+# # Save raw data plots as tiff
+# purrr::walk2(
+# 	raw_data_plot_df$plt, raw_data_plot_df$vaccine_name,
+# 	\(plt, y) ggplot2::ggsave(
+# 		here::here(
+# 			"results", "figures", "raw-data",
+# 			paste0(gsub("/", "-", y), ".tiff")
+# 		),
+# 		plot = plt,
+# 		width = 12,
+# 		height = 8,
+# 		units = "in"
+# 	)
+# )
+
+# Raw fold change plots ----
+# A little bit of preprocessing before plotting
+fc_plot_dat <-
+	dat |>
+	dplyr::select(
+		id, season, vaccine_name, strain_name, strain_type,
+		fold_change, dose
+	)
+
+# Function to create one raw data plot
+make_fc_plot <- function(data, title) {
+	plt <-
+		data |>
+		ggplot2::ggplot() +
+		ggplot2::aes(x = dose, y = fold_change, color = dose, shape = dose) +
+		ggplot2::geom_point(
+			size = 3,
+			alpha = 0.25,
+			show.legend = FALSE,
+			position = ggplot2::position_jitter(0.125, 0.125, 123123)
+		) +
+		ggplot2::scale_y_continuous(
+			trans = "log2",
+			breaks = 2 ^ seq(-10, 10, 2),
+			limits = 2 ^ c(-7, 11),
+			minor_breaks = 2 ^ seq(-10, 10, 1),
+			labels = MASS::fractions
+		) +
+		ggplot2::facet_wrap(~strain_name, ncol = 7, scales = "free_x") +
+		ggplot2::scale_color_brewer(palette = "Dark2") +
+		hgp::theme_ms(text_size_axis_text = 12) +
+		ggplot2::labs(
+			x = NULL,
+			y = "Fold change (post titer / pre titer)",
+			title = paste0("Vaccine: ", title)
+		) +
+		ggplot2::guides(
+			color = ggplot2::guide_legend(override.aes = list(alpha = 1))
+		)
+	
+	return(plt)
+}
+
+# Create a separate raw data plot for each vaccine strain
+fc_data_plot_df <-
+	fc_plot_dat |>
+	tidyr::nest(plt_data = -vaccine_name) |>
+	dplyr::mutate(plt = purrr::map2(plt_data, vaccine_name, make_fc_plot))
+
+# Save fc data plots as png
+purrr::walk2(
+	fc_data_plot_df$plt, fc_data_plot_df$vaccine_name,
+	\(plt, y) ggplot2::ggsave(
+		here::here(
+			"results", "figures", "raw-fc",
+			paste0(gsub("/", "-", y), ".png")
+		),
+		plot = plt,
+		width = 13,
+		height = 14,
+		units = "in"
+	)
+)
+
+# # Save fc data plots as tiff
+# purrr::walk2(
+# 	fc_data_plot_df$plt, fc_data_plot_df$vaccine_name,
+# 	\(plt, y) ggplot2::ggsave(
+# 		here::here(
+# 			"results", "figures", "raw-fc",
+# 			paste0(gsub("/", "-", y), ".tiff")
+# 		),
+# 		plot = plt,
+# 		width = 12,
+# 		height = 8,
+# 		units = "in"
+# 	)
+# )
+
+
 
 # END OF FILE ==================================================================
