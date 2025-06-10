@@ -1,0 +1,3 @@
+*.qmd linguist-language=RMarkdown
+*.js linguist-vendored
+renv/* linguist-vendored
