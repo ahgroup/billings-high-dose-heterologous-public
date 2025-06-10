@@ -1,10 +1,11 @@
 # High dose inactivated influenza vaccine inconsistently improves heterologous antibody responses in an elderly human cohort
 
-[![DOI](https://zenodo.org/badge/436781953.svg)](https://zenodo.org/badge/latestdoi/436781953)
+[![Zenodo](https://zenodo.org/badge/436781953.svg)](https://zenodo.org/badge/latestdoi/436781953)
+[![JID](https://img.shields.io/badge/JID-10.1093/infdis/jiaf003-red)](https://doi.org/10.1093/infdis/jiaf003)
 
 This repo contains the code, data, and results associated with the manuscript
 "High dose inactivated influenza vaccine inconsistently improves heterologous antibody responses in an elderly human cohort"
-by Billings et al. (in preparation).
+by Billings et al., Journal of Infectious Diseases, 2025. 
 
 ## Reproducability instructions
 
